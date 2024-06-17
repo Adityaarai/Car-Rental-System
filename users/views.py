@@ -18,13 +18,15 @@ class LoginView(View):
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
-            email = form.cleaned_data['email']
+            username_or_email = form.cleaned_data['username_or_email']
             password = form.cleaned_data['password']
-            user = authenticate(request, username=email, password=password)
+
+            user = authenticate(request, username=username_or_email, password=password)
+            print(user)
             if user is not None:
                 auth_login(request, user)
                 messages.success(request, 'You have logged in successfully!')
-                return redirect('index')  # Redirect to 'index' after successful login
+                return redirect('index')  
             else:
                 messages.error(request, 'Unable to login. Please check your credentials.')
         return render(request, self.template_name, {'form': form})
@@ -42,6 +44,7 @@ class SignupView(View):
   def post(self, request):
     form = self.form_class(request.POST)
     if form.is_valid():
+      username = form.cleaned_data['username']
       email = form.cleaned_data['email']
       first_name = form.cleaned_data['first_name']
       last_name = form.cleaned_data['last_name']
@@ -49,9 +52,10 @@ class SignupView(View):
       confirm_password = form.cleaned_data['confirm_pass']
 
       if password == confirm_password:
-        user = User.objects.create(username=email, email=email, password=password)
+        user = User.objects.create_user(username=username, email=email)
         user.first_name = first_name
         user.last_name = last_name
+        user.set_password(password)
         user.save()
         messages.success(request, 'You have successfully signed up!')
         return redirect('login')

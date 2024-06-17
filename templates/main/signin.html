@@ -5,7 +5,7 @@
 {% block content %}
 <div class="main-container">
   <div class="left-panel" style="margin-left: 70px">
-    <img src="{% static 'img/vehicle.jpg' %}" alt="Vehicle Image" />
+    <img src="{% static 'images/vehicle.jpg' %}" alt="Vehicle Image" />
   </div>
 
   <div class="right-panel" style="margin-right: 210px">
@@ -24,14 +24,11 @@
       <div class="signup-link">
         <p>
           Don't have an account yet?
-
-          <a class="title" href="{% url 'signup' %}"
-            ><button type="button">Sign Up</button></a
-          >
+          <a class="title" href="{% url 'signup' %}"><button type="button">Sign Up</button></a>
         </p>
       </div>
     </form>
-    <!-- login block -->
+ 
     <div class="message">
       {% for message in messages %} 
         {% if message.tags == 'error' %}
@@ -85,6 +82,7 @@
     margin-bottom: 50px;
   }
 
+  input[type='text'],
   input[type="email"],
   input[type="password"] {
     width: 100%;

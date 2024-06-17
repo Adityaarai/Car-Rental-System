@@ -178,18 +178,18 @@
   </ol>
 </div>
 
-{% if user.is_authenticated %}
+<!-- {% if user.is_authenticated %}
   {% if not user.profile.address or not user.profile.license_number or not user.profile.contact %}
     <script>
       window.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() {
           alert("Please verify your profile before proceeding further.");
-          window.location.href = "{% url 'user_profile' %}"; // Redirect to user_profile
+          window.location.href = ""; // Redirect to user_profile
         }, 1000); // Adjusted the delay time to load homepage first
       });
     </script>
   {% endif %}
-{% endif %}
+{% endif %} -->
 
 {% if not user.is_authenticated %}
 <script>
