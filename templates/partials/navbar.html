@@ -4,12 +4,12 @@
 <nav id="navbar">
   <div class="nav-container">
     <div class="nav-left">
-      <a href=""><h1>VROOM</h1></a>
+      <a href="{% url 'index' %}"><h1>VROOM</h1></a>
     </div>
     <div class="nav-right">
       <ul class="nav-list">
-        <li><a href="">About Us</a></li>
-        <li><a href="">Book Cars</a></li>
+        <li><a href="{% url 'aboutus' %}">About Us</a></li>
+        <li><a href="{% url 'carlisting' %}">Book Cars</a></li>
         {% if user.is_authenticated%}
         <li class="profile-icon">
           <a href="#" class="profile-dropdown">
@@ -60,7 +60,7 @@
     position: fixed;
     width: 100%;
     top: 0;
-    height: 9vh;
+    height: 50px;
     background-color: transparent;
     padding: 20px 10px 10px 10px;
     transition: background-color 0.3s ease;
@@ -74,7 +74,7 @@
     position: fixed;
     width: 100%;
     top: 0;
-    height: 9vh;
+    height: 50px;
     background-color: var(--indigo);
     padding: 20px 10px 10px 10px;
     transition: background-color 0.3s ease;
