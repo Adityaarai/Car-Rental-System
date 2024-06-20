@@ -1,97 +1,9 @@
 {% extends 'partials/base.html' %}
 {% load static %}
-{% block title %} VROOM - Car Details{% endblock %}
 {% block content %}
 
 <div class="main-container">
-  <h1 id="heading">Car Details</h1>
   <div id="main">
-    {% if detail %}
-        <div class="main_details">
-          <!--  Car Image -->
-          <div id="image">
-            <img src="{{ detail.image.url }}" alt="Car Image" />
-          </div>
-          <div id="details">
-            <div id="availability">
-              <p>{{ detail.availability }}</p>
-            </div>
-            <div id="model">
-              <p>{{ detail.car_model }}</p>
-            </div>
-            <div id="name">
-              <p>{{ detail.renter_name }}</p>
-            </div>
-            <div id="price">
-              <p>Rs. {{ detail.price }}</p>
-            </div>
-
-            {% if detail.availability == 'Booked' %}
-              <p style="color: red;">
-                This car has been booked. You can pre-order it after {{ detail.end_date }}.
-              </p>
-              <input type="hidden" id="bookedEndDate" value="{{ detail.end_date|date:'Y-m-d' }}" />
-            {% endif %}
-            
-            <!-- car details booking form -->
-            <form id="booking-form" method="post" action="{% url 'order_create' %}">
-              {% csrf_token %}
-
-              <!-- hidden fields for identifying product -->
-              <input
-                type="hidden"
-                id="renter_contact"
-                name="renter_contact"
-                value="{{ detail.renter_contact }}"
-              />
-              <input
-                type="hidden"
-                id="car_model"
-                name="car_model"
-                value="{{ detail.car_model }}"
-              />
-              <input
-                type="hidden"
-                id="renter_name"
-                name="renter_name"
-                value="{{ detail.renter_name }}"
-              />
-
-              <!-- Date and Time Picker -->
-              <label for="bookingStartDate">Booking Start Date:</label><br />
-              <input
-                type="date"
-                id="bookingStartDate"
-                name="bookingStartDate"
-              /><br />
-              <label for="bookingEndDate">Booking End Date:</label><br />
-              <input
-                type="date"
-                id="bookingEndDate"
-                name="bookingEndDate"
-              /><br /><br />
-
-              <!-- Buttons container -->
-              <div class="buttons-container">
-                <!-- Book button -->
-                <button id="book" class="button" type="submit">Book</button>
-                <!-- Back button -->
-                <a href="{% url 'carlisting' %}?value=All" class="button-link">
-                  <button class="button" type="button">Back</button>
-                </a>
-              </div>
-            </form>
-          </div>
-          <!-- section to display success or error messages -->
-          {% for message in messages %} 
-            {% if message.tags == 'error' %}
-              <div class="alert alert-danger" role="alert">{{ message }}</div>
-            {% elif message.tags == 'success' %}
-              <div class="alert alert-success" role="alert">{{ message }}</div>
-            {% endif %} 
-          {% endfor %}
-        </div>
-    {% else %}
     <div class="after_booking">
       {% if messages %} 
         {% for message in messages %}
@@ -101,26 +13,14 @@
           <br />
         {% endfor %} 
       {% endif %}
-
+    
       <!-- return to carlisting -->
       <a href="{% url 'carlisting' %}?value=All">
         <button class="button" id="return">Return to Carlisting</button>
       </a>
     </div>
-    {% endif %}
   </div>
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const bookedEndDate = document.getElementById('bookedEndDate');
-    const startDateInput = document.getElementById('bookingStartDate');
-  
-    if (bookedEndDate && startDateInput) {
-      startDateInput.min = bookedEndDate.value;
-    }
-  });
-  </script>
 
 <style>
   :root {
