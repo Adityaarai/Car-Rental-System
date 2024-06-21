@@ -82,6 +82,8 @@
               </div>
             </form>
           </div>
+        </div>
+        <div class="messages">
           <!-- section to display success or error messages -->
           {% for message in messages %} 
             {% if message.tags == 'error' %}
@@ -90,23 +92,7 @@
               <div class="alert alert-success" role="alert">{{ message }}</div>
             {% endif %} 
           {% endfor %}
-        </div>
-    {% else %}
-    <div class="after_booking">
-      {% if messages %} 
-        {% for message in messages %}
-          <h1 class="alert alert-success">{{ message }}</h1>
-          <br /><br />
-          <p id="thank">Thank you for choosing us for your travels.</p>
-          <br />
-        {% endfor %} 
-      {% endif %}
-
-      <!-- return to carlisting -->
-      <a href="{% url 'carlisting' %}?value=All">
-        <button class="button" id="return">Return to Carlisting</button>
-      </a>
-    </div>
+        </div>  
     {% endif %}
   </div>
 </div>
