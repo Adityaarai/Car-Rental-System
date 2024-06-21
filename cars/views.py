@@ -40,6 +40,10 @@ class CarDetailView(DetailView):
 class OrderCreateView(LoginRequiredMixin, View):
   login_url = 'login'
   template_name = 'main/car_details.html'
+
+  def handle_no_permission(self):
+    messages.error(self.request, "You need to be logged in to book a car.")
+    return redirect(reverse(self.login_url))
   
   def post(self, request, *args, **kwargs):
     current_url = request.get_full_path()
