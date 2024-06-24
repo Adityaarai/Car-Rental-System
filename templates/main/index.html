@@ -1,4 +1,4 @@
-{% extends 'partials/base.html' %} 
+{% extends 'base.html' %} 
 {% load static %} 
 {% block title %} VROOM - A Website for all your car booking needs {%endblock %} 
 
@@ -9,7 +9,7 @@
     <p><br />Travel Anywhere<br />You Want</p>
 
     {% if user.is_authenticated %}
-      <a href="">
+      <a href="{% url 'carlisting' %}?value=All">
         <button id="bookBtn">Book Now</button>
       </a>
     {% else %}
@@ -60,25 +60,25 @@
 
   <div id="category">
     <div class="suv">
-      <a href="">
+      <a href="{% url 'carlisting' %}?value=SUV">
         <img src="{% static 'images/suv.png' %}" alt="Image 1" />
         <p>SUV</p>
       </a>
     </div>
     <div class="ev">
-      <a href="">
+      <a href="{% url 'carlisting' %}?value=EV">
         <img src="{% static 'images/ev.png' %}" alt="Image 2" />
         <p>EV</p>
       </a>
     </div>
     <div class="truck">
-      <a href="">
+      <a href="{% url 'carlisting' %}?value=Truck">
         <img src="{% static 'images/truck.png' %}" alt="Image 3" />
         <p>Truck</p>
       </a>
     </div>
     <div class="sedan">
-      <a href="">
+      <a href="{% url 'carlisting' %}?value=Sedan">
         <img src="{% static 'images/sedan.png' %}" alt="Image 4" />
         <p>Sedan</p>
       </a>
