@@ -20,15 +20,15 @@ class IndexView(View):
 # ------------------------------------------------------------------------------------------------
 
 
-class CarsView(ListView):
+class CarsListView(ListView):
   model = CarDetail
-  template_name = 'main/carlisting.html'
+  template_name = 'cars/cars_listing.html'
 
 # ------------------------------------------------------------------------------------------------
 
 
 class CarDetailView(DetailView):
-  template_name = 'main/car_details.html'
+  template_name = 'cars/car_details.html'
   model = CarDetail
   context_object_name = 'detail'
 
@@ -39,7 +39,7 @@ class CarDetailView(DetailView):
 
 class OrderCreateView(LoginRequiredMixin, View):
   login_url = 'login'
-  template_name = 'main/car_details.html'
+  template_name = 'cars/car_details.html'
 
   def handle_no_permission(self):
     messages.error(self.request, "You need to be logged in to book a car.")
@@ -98,7 +98,7 @@ class OrderCreateView(LoginRequiredMixin, View):
 # ------------------------------------------------------------------------------------------------
 
 class OrderPlacedView(View):
-  template_name = 'main/booking_complete.html'
+  template_name = 'cars/booking_complete.html'
 
   def get(self, request, *args, **kwargs):
     return render(request, self.template_name)
@@ -115,7 +115,7 @@ class AboutUsView(View):
 # ------------------------------------------------------------------------------------------------
 
 class LearnMoreView(View):
-  template_name = 'main/learnmore.html'
+  template_name = 'main/learn_more.html'
 
   def get(self, request):
     return render(request, self.template_name)
