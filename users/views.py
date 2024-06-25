@@ -7,9 +7,9 @@ from django.contrib.auth.models import User
 
 # Create your views here.
 class LoginView(View):
-    form_class = LoginForm  # Your LoginForm class
+    form_class = LoginForm  
     initial = {}
-    template_name = 'main/signin.html'  # Template name for the login form
+    template_name = 'users/signin.html'  
 
     def get(self, request):
         form = self.form_class(initial=self.initial)
@@ -26,16 +26,37 @@ class LoginView(View):
             if user is not None:
                 auth_login(request, user)
                 messages.success(request, 'You have logged in successfully!')
+                if user.is_staff and user.is_superuser:
+                  return redirect('admin_dashboard')
+                if user.is_staff and not user.is_superuser:
+                  return redirect('distributor_dashboard')
                 return redirect('index')  
             else:
                 messages.error(request, 'Unable to login. Please check your credentials.')
         return render(request, self.template_name, {'form': form})
 
 
+class AdminDashboardView(View):
+  template_name = 'users/admin_dashboard.html'
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['total_distributor_count'] = User.objects.filter(is_staff=True, is_superuser=False).count()
+    context['total_user_count'] = User.objects.filter(is_staff=False).count()
+    context['recent_users'] = User.objects.filter(is_staff=False).order_by('-date_joined')[:5]
+    context['user_details'] = User.objects.all()
+    return context
+
+  def get(self, request):
+    return render(request, self.template_name)
+    
+
+
+
 class SignupView(View):
   form_class = SignupForm
   initial = {}
-  template_name = 'main/signup.html'
+  template_name = 'users/signup.html'
 
   def get(self, request):
     form = self.form_class(initial=self.initial)

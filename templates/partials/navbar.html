@@ -8,24 +8,25 @@
     </div>
     <div class="nav-right">
       <ul class="nav-list">
-        <li><a href="{% url 'aboutus' %}">About Us</a></li>
-        <li><a href="{% url 'carlisting' %}">Book Cars</a></li>
-        {% if user.is_authenticated%}
+        <li><a href="{% url 'about_us' %}">About Us</a></li>
+        <li><a href="{% url 'car_listing' %}">Book Cars</a></li>
+        {% if user.is_authenticated %}
         <li class="profile-icon">
           <a href="#" class="profile-dropdown">
-            <img
-              src="{% static 'images/profileicon.png' %}"
-              alt="User profile icon"
-            />
+            <img src="{% static 'images/profileicon.png' %}" alt="User profile icon"/>
             <ul class="dropdown-menu">
-              {% if user.is_staff %}
-              <li><a href="">My Profile</a></li>
-              {% elif user.is_staff and user.is_superuser %}
-              <li><a href="">My Profile</a></li>
-              {% else %}
-              <li><a href="">My Profile</a></li>
+              {% if user.is_authenticated %}
+                {% if not user.is_staff %}
+                <li><a href="">My Profile</a></li>
+                {% endif %}
+                {% if user.is_staff and user.is_superuser %}
+                <li><a href="">Admin Dashboard</a></li>
+                {% endif %}
+                {% if user.is_staff and not user.is_superuser %}
+                <li><a href="">Distributor Dashboard</a></li>
+                {% endif %}
+                <li><a href="{% url 'logout' %}">Logout</a></li>
               {% endif %}
-              <li><a href="{% url 'logout' %}">Logout</a></li>
             </ul>
           </a>
         </li>
@@ -45,10 +46,7 @@
   };
 
   function scrollFunction() {
-    if (
-      document.body.scrollTop > 80 ||
-      document.documentElement.scrollTop > 80
-    ) {
+    if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
       document.getElementById("navbar").classList.add("scrolled");
     } else {
       document.getElementById("navbar").classList.remove("scrolled");
@@ -67,7 +65,6 @@
     z-index: 1000;
   }
 </style>
-
 {% else %}
 <style>
   #navbar {
@@ -92,13 +89,11 @@
       var dropdownMenu = profileIcon.querySelector(".dropdown-menu");
 
       profileDropdown.addEventListener("click", function (event) {
-        event.preventDefault(); // Prevent default action
-        event.stopPropagation(); // Stop event propagation
-
+        event.preventDefault();
+        event.stopPropagation();
         dropdownMenu.classList.toggle("show");
       });
 
-      // Close dropdown when clicking outside
       window.addEventListener("click", function (event) {
         if (!profileIcon.contains(event.target)) {
           dropdownMenu.classList.remove("show");
@@ -109,6 +104,12 @@
 </script>
 
 <style>
+  *{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+  }
   :root {
     --indigo: #16425b;
     --lapis: #2f6690;
@@ -136,7 +137,7 @@
 
   .nav-list {
     display: flex;
-    align-items: center; /* Align items vertically in the center */
+    align-items: center;
   }
 
   .nav-list li {
@@ -205,10 +206,10 @@
   }
 
   .dropdown-menu li {
-    padding: 5px 0; /* Added padding to each list item */
+    padding: 5px 0;
   }
 
   .dropdown-menu li:last-child {
-    margin-left: 40px; /* Adjusted margin to push 'logout' a bit to the right */
+    margin-left: 40px;
   }
 </style>

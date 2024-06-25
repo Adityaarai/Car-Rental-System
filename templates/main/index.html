@@ -9,7 +9,7 @@
     <p><br />Travel Anywhere<br />You Want</p>
 
     {% if user.is_authenticated %}
-      <a href="{% url 'carlisting' %}?value=All">
+      <a href="{% url 'car_listing' %}?value=All">
         <button id="bookBtn">Book Now</button>
       </a>
     {% else %}
@@ -39,15 +39,6 @@
             
             <button type="submit">Sign In</button>
           </form>
-          <div class="message">
-            {% for message in messages %}
-              {% if message.tags == 'error' %}
-                <div class="alert alert-danger" role="alert">{{ message }}</div>
-              {% elif message.tags == 'success' %}
-                <div class="alert alert-success" role="alert">{{ message }}</div>
-              {% endif %} 
-            {% endfor %}
-          </div>
         </div>
         <!-- login block -->
       </div>
@@ -60,25 +51,25 @@
 
   <div id="category">
     <div class="suv">
-      <a href="{% url 'carlisting' %}?value=SUV">
+      <a href="{% url 'car_listing' %}?value=SUV">
         <img src="{% static 'images/suv.png' %}" alt="Image 1" />
         <p>SUV</p>
       </a>
     </div>
     <div class="ev">
-      <a href="{% url 'carlisting' %}?value=EV">
+      <a href="{% url 'car_listing' %}?value=EV">
         <img src="{% static 'images/ev.png' %}" alt="Image 2" />
         <p>EV</p>
       </a>
     </div>
     <div class="truck">
-      <a href="{% url 'carlisting' %}?value=Truck">
+      <a href="{% url 'car_listing' %}?value=Truck">
         <img src="{% static 'images/truck.png' %}" alt="Image 3" />
         <p>Truck</p>
       </a>
     </div>
     <div class="sedan">
-      <a href="{% url 'carlisting' %}?value=Sedan">
+      <a href="{% url 'car_listing' %}?value=Sedan">
         <img src="{% static 'images/sedan.png' %}" alt="Image 4" />
         <p>Sedan</p>
       </a>
@@ -264,7 +255,7 @@
   }
 
   .login-form h2 {
-    margin-top: 30%;
+    margin-top: 80px;
     margin-bottom: 40px;
   }
 
