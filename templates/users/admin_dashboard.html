@@ -71,13 +71,13 @@
             <div class="card" id="distributor_card">
               <h3>Distributor Information</h3>
               <label id="TotalDistributors">
-                <span id="TotalDistributors">{{ total_distributor_count }}</span>
+                <span id="TotalDistributors"> <i class='fas fa-user-check'></i> {{ total_distributor_count }}</span>
               </label>
             </div>
             <div class="card" id="user_card">
               <h3>User Information</h3>
               <label id="TotalUsers">
-                <span id="TotalUsers">{{ total_user_count }}</span>
+                <span id="TotalUsers"> <i class='fas fa-user-check'></i>{{ total_user_count }}</span>
               </label>
             </div>
           </div>
@@ -317,15 +317,15 @@
               <th>Contact Number</th>
               <th>Address</th>
             </tr>
-            {% for user in user_detail %}
-              {% if not user.user.is_staff %}
+            {% for user_detail in user_details %}
+              {% if not user_detail.user.is_staff %}
                 <tr>
-                  <td>{{ user.get_full_name }}</td>
-                  <td>{{ user.username }}</td>
-                  <td>{{ user.email }}</td>
-                  <td>{{ user.license_number }}</td>
-                  <td>{{ user.contact }}</td>
-                  <td>{{ user.address }}</td>
+                  <td>{{ user_detail.user.get_full_name }}</td>
+                  <td>{{ user_detail.user.username }}</td>
+                  <td>{{ user_detail.user.email }}</td>
+                  <td>{{ user_detail.license_number }}</td>
+                  <td>{{ user_detail.contact }}</td>
+                  <td>{{ user_detail.address }}</td>
                 </tr>
               {% endif %} 
             {% endfor %}

@@ -41,7 +41,7 @@ class CarDetail(models.Model):
 class CarOrder(models.Model):
     order_id = models.AutoField(primary_key=True)
     product = models.ForeignKey(CarDetail, on_delete=models.DO_NOTHING)
-    rentee = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=1)
+    rentee = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     start_date = models.DateTimeField(null=True)
     end_date = models.DateTimeField(null=True)

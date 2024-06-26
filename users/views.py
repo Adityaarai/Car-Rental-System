@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.views import View
 from .forms import LoginForm, SignupForm
 from django.contrib.auth.models import User
+from .models import UserProfile
+from django.views.generic import CreateView, UpdateView, DeleteView
 
 # Create your views here.
 class LoginView(View):
@@ -25,7 +27,6 @@ class LoginView(View):
             print(user)
             if user is not None:
                 auth_login(request, user)
-                messages.success(request, 'You have logged in successfully!')
                 if user.is_staff and user.is_superuser:
                   return redirect('admin_dashboard')
                 if user.is_staff and not user.is_superuser:
@@ -35,23 +36,28 @@ class LoginView(View):
                 messages.error(request, 'Unable to login. Please check your credentials.')
         return render(request, self.template_name, {'form': form})
 
-
 class AdminDashboardView(View):
+    template_name = 'users/admin_dashboard.html'
+
+    def get(self, request):
+        total_distributor_count = UserProfile.objects.filter(user__is_staff=True, user__is_superuser=False).count()
+        total_user_count = UserProfile.objects.filter(user__is_staff=False).count()
+        recent_users = UserProfile.objects.filter(user__is_staff=False).order_by('-user__date_joined')[:5]
+        user_details = UserProfile.objects.all()
+
+        context = {
+            'total_distributor_count': total_distributor_count,
+            'total_user_count': total_user_count,
+            'recent_users': recent_users,
+            'user_details': user_details,
+        }
+        return render(request, self.template_name, context)
+
+
+
+class UserCreateView(CreateView):
   template_name = 'users/admin_dashboard.html'
-
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['total_distributor_count'] = User.objects.filter(is_staff=True, is_superuser=False).count()
-    context['total_user_count'] = User.objects.filter(is_staff=False).count()
-    context['recent_users'] = User.objects.filter(is_staff=False).order_by('-date_joined')[:5]
-    context['user_details'] = User.objects.all()
-    return context
-
-  def get(self, request):
-    return render(request, self.template_name)
-    
-
-
+  query_set = User.objects.all()
 
 class SignupView(View):
   form_class = SignupForm
