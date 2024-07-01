@@ -131,6 +131,8 @@
               <th>Name</th>
               <th>Contact Number</th>
               <th>Location Incharge</th>
+              <th></th>
+              <th></th>
             </tr>
             {% for user_detail in user_details %} 
               {% if '.vroom@gmail.com' in user_detail.user.email and user_detail.user.is_staff %}
@@ -140,6 +142,18 @@
                   <td>{{ user_detail.user.get_full_name }}</td>
                   <td>{{ user_detail.contact }}</td>
                   <td>{{ user_detail.address }}</td>
+                  <td>
+                    <form method="post" action="{% url 'update_user' user_detail.user.id %}">
+                      {% csrf_token %}
+                      <button type="submit" id="distributor-update-btn">Update</button>
+                    </form>
+                  </td>
+                  <td>
+                    <form method="post" action="{% url 'delete_user' user_detail.user.id %}" onsubmit="return confirmDelete();">
+                      {% csrf_token %}
+                      <button type="submit" id="distributor-delete-btn">Delete</button>
+                    </form>
+                  </td>
                 </tr>
               {% endif %} 
             {% endfor %}
@@ -474,22 +488,7 @@
             </div>
           </div>
 
-          <!-- popup to delete user -->
-          <div class="popup" id="deleteUserPopup">
-            <div class="popup-content">
-              <span class="close" onclick="closePopup('deleteUserPopup')"
-                >&times;</span
-              >
-              <h2>Delete User</h2>
-              <form method="post" id="deleteUser">
-                {% csrf_token %}
-                <label for="email">Enter user email to delete user:</label
-                ><br />
-                <input type="text" id="email" name="email" /><br />
-                <button type="submit" name="deleteUser">Delete User</button>
-              </form>
-            </div>
-          </div>
+
         </div>
       </div>
     </div>
@@ -505,6 +504,11 @@
       topic === "distributor" ? "block" : "none";
     document.getElementById("user-content").style.display =
       topic === "user" ? "block" : "none";
+  }
+
+  // confirm user deletion
+  function confirmDelete(){
+    return confirm("Are you sure you want to delete this user?");
   }
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -599,6 +603,10 @@
     --white: #fff;
     --yellow: #f4a62a;
     --darkyellow: #df9319;
+  }
+  *{
+    list-style: none;
+    text-decoration: none;
   }
 
   /* Reset default margin, padding, and overflow */

@@ -20,7 +20,7 @@
                 <li><a href="">My Profile</a></li>
                 {% endif %}
                 {% if user.is_staff and user.is_superuser %}
-                <li><a href="">Admin Dashboard</a></li>
+                <li><a href="{% url 'admin_dashboard' %}">Admin Dashboard</a></li>
                 {% endif %}
                 {% if user.is_staff and not user.is_superuser %}
                 <li><a href="">Distributor Dashboard</a></li>

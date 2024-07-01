@@ -54,3 +54,29 @@ class SignupForm(forms.Form):
     'placeholder': 'Confirm your password'
   }))
 
+
+class AddUserForm(forms.ModelForm):
+  first_name = forms.CharField(max_length=50, label="First Name", required=True,
+  widget=forms.TextInput(attrs={
+    'type': 'text',
+    'class': 'form-control',
+    'placeholder': 'First Name'
+  }))
+  last_name = forms.CharField(max_length=50, label="Last Name", required=True,
+  widget=forms.TextInput(attrs={
+    'type': 'text',
+    'class': 'form-control',
+    'placeholder': 'Last Name'
+  }))
+  username = forms.CharField(max_length=50, label="Username", required=True, 
+  widget=forms.TextInput(attrs={
+    'type': 'text',
+    'class': 'form-control',
+    'placeholder': 'Username',
+  }))
+  email = forms.EmailField(max_length=50, label="Email", required=True,
+  widget=forms.TextInput(attrs={
+    'type': 'email',
+    'class': 'form-control',
+    'placeholder': 'Email'
+  }))

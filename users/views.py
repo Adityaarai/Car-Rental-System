@@ -6,6 +6,7 @@ from .forms import LoginForm, SignupForm
 from django.contrib.auth.models import User
 from .models import UserProfile
 from django.views.generic import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 
 # Create your views here.
 class LoginView(View):
@@ -53,6 +54,21 @@ class AdminDashboardView(View):
         }
         return render(request, self.template_name, context)
 
+class UserDeleteView(DeleteView):
+  template_name = 'users/admin_dashboard.html'
+  model = User
+  success_url = reverse_lazy('admin_dashboard')
+
+class UserUpdateView(UpdateView):
+    model = User
+    template_name = 'users/update_user.html'
+    fields = ['username', 'email', 'first_name', 'last_name']
+    success_url = reverse_lazy('admin_dashboard')
+
+    def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      context['user_detail'] = self.object
+      return context
 
 
 class UserCreateView(CreateView):
