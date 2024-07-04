@@ -85,7 +85,7 @@ class AddUserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    username = forms.CharField(max_length=150,  initial='lobalcgi')
+    username = forms.CharField(max_length=150, required=True)
     email = forms.EmailField(required=True)
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
@@ -96,17 +96,6 @@ class UserProfileForm(forms.ModelForm):
             'username', 'email', 'first_name', 'last_name',
             'address' , 'contact'
         ]
-        widget = forms.TextInput(attrs={
-          'class': 'form-control',
-        })
-
-    def __init__(self, *args, **kwargs):
-      super(UserProfileForm, self).__init__(*args, **kwargs)
-      if self.instance and self.instance.pk:
-          self.fields['username'].initial = self.instance.user.username
-          self.fields['email'].initial = self.instance.user.email
-          self.fields['first_name'].initial = self.instance.user.first_name
-          self.fields['last_name'].initial = self.instance.user.last_name
 
     def save(self, commit=True):
       user_profile = super(UserProfileForm, self).save(commit=False)
@@ -119,3 +108,22 @@ class UserProfileForm(forms.ModelForm):
         user.save()
         user_profile.save()
       return user_profile
+    
+class UserProfileCreateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name']
+
+    address = forms.CharField(max_length=100, required=False)
+    contact = forms.CharField(max_length=100, required=False)
+
+    def save(self, commit=True):
+      user = super(UserProfileCreateForm, self).save(commit=False)
+      user.set_password('Vroom@123')
+      if commit:
+        user.save()
+        profile = UserProfile.objects.get(user=user)
+        profile.contact = self.cleaned_data['contact']
+        profile.address = self.cleaned_data['address']
+        profile.save()
+      return user

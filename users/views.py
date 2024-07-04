@@ -7,7 +7,10 @@ from django.contrib.auth.models import User
 from .models import UserProfile
 from django.views.generic import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from .forms import UserProfileForm
+from .forms import UserProfileForm, UserProfileCreateForm
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+from cars.models import CarDetail, CarOrder
 
 # Create your views here.
 class LoginView(View):
@@ -80,9 +83,33 @@ class UserUpdateView(UpdateView):
 # ------------------------------------------------------------------------------------------------
 
 class UserCreateView(CreateView):
-  template_name = 'users/admin_dashboard.html'
-  query_set = User.objects.all()
+    model = User
+    form_class = UserProfileCreateForm
+    template_name = 'users/add_user.html'
+    success_url = reverse_lazy('admin_dashboard')
 
+    def form_valid(self, form):
+        # Save the user instance from the form
+        user = form.save()
+
+        # Example logic to assign permissions if email matches a specific domain
+        user_email = form.cleaned_data['email']
+        if '.vroom@gmail.com' in user_email:
+            user.is_staff = True  # Example: Make user staff
+            # Example: Assign permissions for specific models
+            car_detail_content_type = ContentType.objects.get_for_model(CarDetail)
+            car_detail_permissions = Permission.objects.filter(content_type=car_detail_content_type)
+
+            car_order_content_type = ContentType.objects.get_for_model(CarOrder)
+            car_order_permissions = Permission.objects.filter(content_type=car_order_content_type)
+
+            all_permissions = car_detail_permissions | car_order_permissions
+            user.user_permissions.add(*all_permissions)
+
+        user.save()
+
+        messages.success(self.request, "User added successfully!!")
+        return super().form_valid(form)
 # ------------------------------------------------------------------------------------------------
 
 class SignupView(View):

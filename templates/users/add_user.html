@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VROOM - Add User</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+      text-decoration: none;
+      list-style: none;
+      box-sizing: border-box;
+    }
+    :root{
+      --primary-color: #2f6690;
+      --secondary-color: #16425b;
+      --alert-danger: #ff4d4d;
+      --alert-success: #4caf50;
+      --background-color: #f4f4f4;
+      --text-color: #333;
+      --border-color: #ccc;
+      --input-background-color: #fff;
+    }
+    body{
+      font-family: "Montserrat", sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+    .container{
+      width: 90vw;
+      margin: 0 auto;
+      padding: 20px;
+      margin-top: 9.8vh;
+      min-height: 65vh;
+      background-color: var(--input-background-color);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+    h2{
+      color: var(--primary-color);
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    form{
+      width: 100%;
+    }
+    input[type='text'],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid var(--border-color);
+      background-color: var(--input-background-color);
+    }
+    .button-container{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+    .back-button, button{
+      padding: 15px;
+      border-radius: 5px;
+      background-color: var(--primary-color);
+      color: #fff;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
+    }
+    .back-button:hover, button:hover{
+      background-color: var(--secondary-color);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Add User</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div class="button-container">
+        <a href="{% url 'admin_dashboard' %}" class="back-button">Back</a>
+        <button type="submit">Add</button>
+      </div>
+    </form>
+    <br><br>
+    <p>Note: Default password is Vroom@123</p>
+  </div>
+</body>
+</html>

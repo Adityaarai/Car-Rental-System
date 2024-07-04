@@ -8,11 +8,13 @@ from datetime import datetime
 from django.utils import timezone
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from users.forms import LoginForm
 
 
 # Create your views here.
 class IndexView(View):
   template_name = 'main/index.html'
+  form_class = LoginForm
 
   def get(self, request):
     return render(request, self.template_name)
