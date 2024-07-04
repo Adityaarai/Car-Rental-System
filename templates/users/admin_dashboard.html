@@ -14,6 +14,7 @@
   </head>
   <body>
     <div class="container">
+
       <!-- main button to navigate between car and booking -->
       <div class="sidebar">
         <h1 id="logo">VROOM</h1>
@@ -82,8 +83,8 @@
             </div>
           </div>
 
+          
           <h1>Recent User</h1>
-
           <!-- table to show recent user information -->
           <table>
             <tr>
@@ -107,22 +108,10 @@
 
         <div id="distributor-content">
           <h2>Distributor Information</h2>
-          <!-- buttons to add and delete distributor -->
-          <button id="distributor-add-btn" onclick="openAddDistributorPopup()">
-            Add
-          </button>
-          <button
-            id="distributor-edit-btn"
-            onclick="openEditDistributorPopup()"
-          >
-            Edit
-          </button>
-          <button
-            id="distributor-delete-btn"
-            onclick="openDeleteDistributorPopup()"
-          >
-            Delete
-          </button>
+
+          <!-- buttons to add distributor -->
+          <a href="" id="distributor-add-btn">Add Distributor</a>
+          
           <!-- table to show distributor information -->
           <table>
             <tr>
@@ -143,13 +132,13 @@
                   <td>{{ user_detail.contact }}</td>
                   <td>{{ user_detail.address }}</td>
                   <td>
-                    <form method="post" action="{% url 'update_user' user_detail.user.id %}">
+                    <form method="post" action="{% url 'update_user' user_detail.id %}">
                       {% csrf_token %}
-                      <button type="submit" id="distributor-update-btn">Update</button>
+                      <button type="submit" id="distributor-edit-btn">Update</button>
                     </form>
                   </td>
                   <td>
-                    <form method="post" action="{% url 'delete_user' user_detail.user.id %}" onsubmit="return confirmDelete();">
+                    <form method="post" action="{% url 'delete_user' user_detail.id %}" onsubmit="return confirmDelete();">
                       {% csrf_token %}
                       <button type="submit" id="distributor-delete-btn">Delete</button>
                     </form>
@@ -159,177 +148,24 @@
             {% endfor %}
           </table>
 
-          <!-- popup to add distributor -->
-          <div class="popup" id="addDistributorPopup">
-            <div class="popup-content">
-              <span class="close" onclick="closePopup('addDistributorPopup')"
-                >&times;</span
-              >
-              <h2>Add Distributor</h2>
-
-              <form id="addDistributorForm" method="post">
-                {% csrf_token %}
-                <label for="distributorFirstName">First Name:</label><br />
-                <input
-                  type="text"
-                  id="FirstName"
-                  name="FirstName"
-                  required
-                /><br />
-
-                <label for="distributorLastName">Last Name:</label><br />
-                <input
-                  type="text"
-                  id="LastName"
-                  name="LastName"
-                  required
-                /><br />
-
-                <label for="username">Username:</label><br />
-                <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  required
-                /><br />
-
-                <label for="email">Email:</label><br />
-                <input type="email" id="email" name="email" required /><br />
-
-                <label for="location">Location Incharge:</label><br />
-                <input
-                  type="text"
-                  id="location"
-                  name="location"
-                  required
-                /><br />
-
-                <label for="password">Password:</label><br />
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  required
-                /><br />
-
-                <label for="contactNumber">Contact Number:</label><br />
-                <input
-                  type="text"
-                  id="contactNumber"
-                  name="contactNumber"
-                  required
-                /><br />
-
-                <button type="submit" name="addDistributor">
-                  Add Distributor
-                </button>
-              </form>
-            </div>
-          </div>
-
-          <!-- Popup to edit distributor -->
-          <div class="popup" id="editDistributorPopup">
-            <div class="popup-content">
-              <span class="close" onclick="closePopup('editDistributorPopup')"
-                >&times;</span
-              >
-              <h2>Edit Distributor</h2>
-              <form id="editDistributorForm" method="post">
-                {% csrf_token %}
-
-                <!-- email for identifying distributors to edit -->
-                <p>Enter email of the distributor to edit</p>
-                <label for="editEmail">Email:</label><br />
-                <input type="email" id="email" name="email" required /><br />
-
-                <!-- Input fields for editing distributor details -->
-                <p>Enter new distributor details</p>
-                <label for="editDistributorFirstName">First Name:</label><br />
-                <input
-                  type="text"
-                  id="FirstName"
-                  name="FirstName"
-                  required
-                /><br />
-
-                <label for="editDistributorLastName">Last Name:</label><br />
-                <input
-                  type="text"
-                  id="LastName"
-                  name="LastName"
-                  required
-                /><br />
-
-                <label for="editUsername">Username:</label><br />
-                <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  required
-                /><br />
-
-                <label for="editLocation">Location Incharge:</label><br />
-                <input
-                  type="text"
-                  id="location"
-                  name="location"
-                  required
-                /><br />
-
-                <label for="editContactNumber">Contact Number:</label><br />
-                <input
-                  type="text"
-                  id="contactNumber"
-                  name="contactNumber"
-                  required
-                /><br />
-
-                <button type="submit" name="editDistributor">
-                  Update Distributor
-                </button>
-              </form>
-            </div>
-          </div>
-
-          <!-- popup to delete distributor -->
-          <div class="popup" id="deleteDistributorPopup">
-            <div class="popup-content">
-              <span class="close" onclick="closePopup('deleteDistributorPopup')"
-                >&times;</span
-              >
-              <h2>Delete Distributor</h2>
-              <form method="post" id="deleteDistributor">
-                {% csrf_token %}
-                <label for="distributorID"
-                  >Enter distributor email to delete distributor:</label
-                ><br />
-                <input type="text" id="email" name="email" /><br />
-                <button type="submit" name="deleteUser">
-                  Delete Distributor
-                </button>
-              </form>
-            </div>
-          </div>
         </div>
 
         <div id="user-content">
           <h2>User Information</h2>
-          <!-- buttons to add ,edit and delete user -->
-          <button id="user-add-btn" onclick="openAddUserPopup()">Add</button>
-          <button id="user-edit-btn" onclick="openEditUserPopup()">Edit</button>
-          <button id="user-delete-btn" onclick="openDeleteUserPopup()">
-            Delete
-          </button>
-
+          <!-- buttons to add user -->
+          <a href="" id="user-add-btn">Add User</a>
+          
           <!-- table to show user information -->
           <table>
             <tr>
               <th>Name</th>
               <th>Username</th>
               <th>Email</th>
-              <th>License Number</th>
+              <th>License Photo</th>
               <th>Contact Number</th>
               <th>Address</th>
+              <th></th>
+              <th></th>
             </tr>
             {% for user_detail in user_details %}
               {% if not user_detail.user.is_staff %}
@@ -337,157 +173,33 @@
                   <td>{{ user_detail.user.get_full_name }}</td>
                   <td>{{ user_detail.user.username }}</td>
                   <td>{{ user_detail.user.email }}</td>
-                  <td>{{ user_detail.license_number }}</td>
+                  <td>
+                    {% if user_detail.license_photo %}
+                      <img src="{{ user_detail.license_photo.url }}" alt="License Photo">
+                    {% else %}
+                      None
+                    {% endif %}
+                  </td>
                   <td>{{ user_detail.contact }}</td>
                   <td>{{ user_detail.address }}</td>
+                  <td>
+                    <form method="post" action="{% url 'update_user' user_detail.id %}">
+                      {% csrf_token %}
+                      <button type="submit" id="user-edit-btn">Update</button>
+                    </form>
+                  </td>
+                  <td>
+                    <form method="post" action="{% url 'delete_user' user_detail.id %}" onsubmit="return confirmDelete();">
+                      {% csrf_token %}
+                      <button type="submit" id="user-delete-btn">Delete</button>
+                    </form>
+                  </td>
                 </tr>
               {% endif %} 
             {% endfor %}
           </table>
 
-          <!-- popup to add user -->
-          <div class="popup" id="addUserPopup">
-            <div class="popup-content">
-              <span class="close" onclick="closePopup('addUserPopup')"
-                >&times;</span
-              >
-              <h2>Add User</h2>
-              <form id="addUserForm" method="post">
-                {% csrf_token %}
-                <label for="FirstName">First Name:</label><br />
-                <input
-                  type="text"
-                  id="FirstName"
-                  name="FirstName"
-                  required
-                /><br />
-
-                <label for="LastName">Last Name:</label><br />
-                <input
-                  type="text"
-                  id="LastName"
-                  name="LastName"
-                  required
-                /><br />
-
-                <label for="username">Username:</label><br />
-                <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  required
-                /><br />
-
-                <label for="email">Email:</label><br />
-                <input type="email" id="email" name="email" required /><br />
-
-                <label for="location">Address:</label><br />
-                <input
-                  type="text"
-                  id="location"
-                  name="location"
-                  required
-                /><br />
-
-                <label for="password">Password:</label><br />
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  required
-                /><br />
-
-                <label for="contactNumber">Contact Number:</label><br />
-                <input
-                  type="text"
-                  id="contactNumber"
-                  name="contactNumber"
-                  required
-                /><br />
-
-                <label for="license_number">License Number:</label><br />
-                <input
-                  type="text"
-                  id="license_number"
-                  name="license_number"
-                  required
-                /><br />
-
-                <button type="submit" name="addUser">Add User</button>
-              </form>
-            </div>
-          </div>
-
-          <!-- Popup to edit user -->
-          <div class="popup" id="editUserPopup">
-            <div class="popup-content">
-              <span class="close" onclick="closePopup('editUserPopup')"
-                >&times;</span
-              >
-              <h2>Edit User</h2>
-              <form id="editUserForm" method="post">
-                {% csrf_token %}
-
-                <!-- email for identifying users to edit -->
-                <p>Enter email of the user to edit</p>
-                <label for="editEmail">Email:</label><br />
-                <input type="email" id="email" name="email" required /><br />
-
-                <!-- Input fields for editing user details -->
-                <p>Enter new distributor details</p>
-                <label for="editDistributorFirstName">First Name:</label><br />
-                <input
-                  type="text"
-                  id="FirstName"
-                  name="FirstName"
-                  required
-                /><br />
-
-                <label for="editDistributorLastName">Last Name:</label><br />
-                <input
-                  type="text"
-                  id="LastName"
-                  name="LastName"
-                  required
-                /><br />
-
-                <label for="editUsername">Username:</label><br />
-                <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  required
-                /><br />
-
-                <label for="editLocation">Address:</label><br />
-                <input
-                  type="text"
-                  id="location"
-                  name="location"
-                  required
-                /><br />
-
-                <label for="editContactNumber">Contact Number:</label><br />
-                <input
-                  type="text"
-                  id="contactNumber"
-                  name="contactNumber"
-                  required
-                /><br />
-
-                <label for="editLicenseNumber">License Number:</label><br />
-                <input
-                  type="text"
-                  id="license_number"
-                  name="license_number"
-                  required
-                /><br />
-
-                <button type="submit" name="editUser">Update User</button>
-              </form>
-            </div>
-          </div>
-
+        
 
         </div>
       </div>
@@ -515,68 +227,6 @@
     console.log("DOMContentLoaded");
     toggleContent("default");
   });
-
-  // Function to open the add distributor popup
-  function openAddDistributorPopup() {
-    const addDistributorPopup = document.getElementById("addDistributorPopup");
-    if (addDistributorPopup) {
-      addDistributorPopup.style.display = "block";
-    }
-  }
-
-  // Function to open the edit distributor popup
-  function openEditDistributorPopup() {
-    const editDistributorPopup = document.getElementById(
-      "editDistributorPopup"
-    );
-    if (editDistributorPopup) {
-      editDistributorPopup.style.display = "block";
-      // Here you can populate the form fields with existing distributor data if needed
-    }
-  }
-
-  // Function to open the delete distributor popup
-  function openDeleteDistributorPopup() {
-    const deleteDistributorPopup = document.getElementById(
-      "deleteDistributorPopup"
-    );
-    if (deleteDistributorPopup) {
-      deleteDistributorPopup.style.display = "block";
-    }
-  }
-
-  // Function to open the add user popup
-  function openAddUserPopup() {
-    const addUserPopup = document.getElementById("addUserPopup");
-    if (addUserPopup) {
-      addUserPopup.style.display = "block";
-    }
-  }
-
-  // Function to open the edit user popup
-  function openEditUserPopup() {
-    const editUserPopup = document.getElementById("editUserPopup");
-    if (editUserPopup) {
-      editUserPopup.style.display = "block";
-      // Here you can populate the form fields with existing user data if needed
-    }
-  }
-
-  // Function to open the delete user popup
-  function openDeleteUserPopup() {
-    const deleteUserPopup = document.getElementById("deleteUserPopup");
-    if (deleteUserPopup) {
-      deleteUserPopup.style.display = "block";
-    }
-  }
-
-  // Close popup function
-  function closePopup(id) {
-    const popup = document.getElementById(id);
-    if (popup) {
-      popup.style.display = "none";
-    }
-  }
 </script>
 
 <style>

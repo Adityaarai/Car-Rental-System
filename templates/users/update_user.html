@@ -1,139 +1,183 @@
-{% extends 'base.html' %}
-{% block title %} VROOM - Update User {% endblock %}
-{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VROOM - Update User</title>
+  <style>
+   * {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  list-style: none;
+  box-sizing: border-box;
+}
 
-<div class="main-container">
+:root {
+  --primary-color: #2f6690;
+  --secondary-color: #16425b;
+  --alert-danger: #ff4d4d;
+  --alert-success: #4caf50;
+  --background-color: #f4f4f4;
+  --text-color: #333;
+  --border-color: #ccc;
+  --input-background-color: #fff;
+}
 
-  <div class="left-panel" style="margin-left: 70px">
-    {% if user_detail %}
-      <p>Username: {{ user_detail.username }}</p>
-      <p>Email: {{ user_detail.email }}</p>
-      <p>Full name: {{ user_detail.get_full_name }}</p>
-      <p>Contact: {{ user_detail.contact }}</p>
-      <p>Address: {{ user_detail.address }}</p>
-    {% endif %}
-  </div>
+body {
+  font-family: "Montserrat", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
 
-  <div class="right-panel" style="margin-right: 210px">
+.main-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 90vw;
+  margin: 0 auto;
+  padding: 20px;
+  margin-top: 9.8vh;
+  min-height: 65.6vh;
+  background-color: var(--input-background-color);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
 
-    <h2>Update User</h2>
-    <form id="user-update-form" method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
+.left-panel,
+.right-panel {
+  flex: 1;
+  padding: 20px;
+}
 
-      <button type="submit">Update</button>
-    </form>
- 
-    <div class="message">
-      {% for message in messages %} 
-        {% if message.tags == 'error' %}
-          <div class="alert alert-danger" role="alert">{{ message }}</div>
-        {% elif message.tags == 'success' %}
-          <div class="alert alert-success" role="alert">{{ message }}</div>
-        {% endif %} 
-      {% endfor %}
+.left-panel {
+  margin-right: 20px;
+}
+
+.right-panel {
+  margin-left: 20px;
+}
+
+.left-panel p {
+  margin-bottom: 15px;
+  font-size: 1.1em;
+}
+
+h2 {
+  color: var(--primary-color);
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+form {
+  width: 100%;
+}
+
+input[type='text'],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-background-color);
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.back-button,
+button {
+  padding: 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  color: #fff;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover,
+button:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Customizing alert colors */
+.alert-danger {
+  color: var(--alert-danger);
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #fdd;
+  margin-bottom: 10px;
+}
+
+.alert-success {
+  color: var(--alert-success);
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #dfd;
+  margin-bottom: 10px;
+}
+
+/* Adjusting message display */
+.message {
+  margin-top: 20px;
+  max-width: 300px;
+  word-wrap: break-word;
+}
+
+</style>
+</head>
+<body>
+  <div class="main-container">
+
+    <div class="left-panel">
+      <h1>User Details</h1>
+      <br><br><br>
+      {% if user_detail %}
+        <p>Username: {{ user_detail.user.username }}</p>
+        <p>Email: {{ user_detail.user.email }}</p>
+        <p>Full name: {{ user_detail.user.get_full_name }}</p>
+        <p>Contact: {{ user_detail.contact }}</p>
+        <p>Address: {{ user_detail.address }}</p>
+      {% endif %}
+    </div>
+  
+    <div class="right-panel">
+  
+      <h2>Update User</h2>
+      <form id="user-update-form" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="button-container">
+          <a href="{% url 'admin_dashboard' %}" class="back-button">Back</a>
+          <button type="submit">Update</button>
+        </div>
+      </form>
+   
+      <div class="message">
+        {% for message in messages %} 
+          {% if message.tags == 'error' %}
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
+          {% elif message.tags == 'success' %}
+            <div class="alert alert-success" role="alert">{{ message }}</div>
+          {% endif %} 
+        {% endfor %}
+      </div>
     </div>
   </div>
-</div>
-
-<style>
-  :root {
-    --primary-color: #2f6690;
-    --secondary-color: #16425b;
-    --alert-danger: red;
-    --alert-success: green;
-  }
-
-  body {
-    font-family: "Montserrat", sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-
-  .main-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 90vw;
-    margin: 0 5%;
-    margin-top: 9.8vh;
-    min-height: 65.6vh;
-  }
-
-  .left-panel {
-    flex: 1;
-  }
-
-  img {
-    max-width: 100%;
-  }
-
-  .form-control {
-    margin-bottom: 15px;
-  }
-
-  .right-panel h2 {
-    margin-top: 0;
-    margin-bottom: 50px;
-  }
-
-  input[type='text'],
-  input[type="email"],
-  input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-  }
-
-  #username_or_email,
-  #password {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-  }
-
-  button,
-  .signup-link button {
-    width: 100%;
-    padding: 15px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: var(--primary-color);
-    color: #fff;
-    cursor: pointer;
-  }
-
-  button:hover,
-  .signup-link button:hover {
-    background-color: var(--secondary-color);
-  }
-
-  .title {
-    color: #fff;
-  }
-
-  /* Customizing alert colors */
-  .alert-danger {
-    color: var(--alert-danger);
-    font-weight: bold;
-  }
-
-  .alert-success {
-    color: var(--alert-success);
-    font-weight: bold;
-  }
-
-  /* Adjusting message display */
-  .message {
-    margin-top: 20px;
-    max-width: 300px;
-    word-wrap: break-word;
-  }
-</style>
-
-{% endblock %}
+</body>
+</html>

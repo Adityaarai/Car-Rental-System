@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from .models import UserProfile
 from django.views.generic import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from .forms import UserProfileForm
 
 # Create your views here.
 class LoginView(View):
@@ -37,6 +38,8 @@ class LoginView(View):
                 messages.error(request, 'Unable to login. Please check your credentials.')
         return render(request, self.template_name, {'form': form})
 
+# ------------------------------------------------------------------------------------------------
+
 class AdminDashboardView(View):
     template_name = 'users/admin_dashboard.html'
 
@@ -54,26 +57,33 @@ class AdminDashboardView(View):
         }
         return render(request, self.template_name, context)
 
+# ------------------------------------------------------------------------------------------------
+
 class UserDeleteView(DeleteView):
   template_name = 'users/admin_dashboard.html'
   model = User
   success_url = reverse_lazy('admin_dashboard')
 
+# ------------------------------------------------------------------------------------------------
+
 class UserUpdateView(UpdateView):
-    model = User
+    model = UserProfile
+    form_class = UserProfileForm
     template_name = 'users/update_user.html'
-    fields = ['username', 'email', 'first_name', 'last_name']
     success_url = reverse_lazy('admin_dashboard')
 
     def get_context_data(self, **kwargs):
-      context = super().get_context_data(**kwargs)
-      context['user_detail'] = self.object
-      return context
+        context = super(UserUpdateView, self).get_context_data(**kwargs)
+        context['user_detail'] = self.object
+        return context
 
+# ------------------------------------------------------------------------------------------------
 
 class UserCreateView(CreateView):
   template_name = 'users/admin_dashboard.html'
   query_set = User.objects.all()
+
+# ------------------------------------------------------------------------------------------------
 
 class SignupView(View):
   form_class = SignupForm
@@ -106,8 +116,12 @@ class SignupView(View):
         messages.error(request, 'Passwords do not match!')
     return render(request, self.template_name, {'form': form})
 
+# ------------------------------------------------------------------------------------------------
+
 class LogoutView(View):
   def get(self, request):
     logout(request)
     messages.success(request, 'You have successfully logged out!!')
     return redirect('index')
+
+# ------------------------------------------------------------------------------------------------
