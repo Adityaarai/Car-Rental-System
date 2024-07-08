@@ -62,6 +62,41 @@ class AdminDashboardView(View):
 
 # ------------------------------------------------------------------------------------------------
 
+class DistributorDashboardView(View):
+    template_name = 'users/distributor_dashboard.html'
+
+    def get(self, request):
+        total_car_count = CarDetail.objects.all().count()
+        available_car_count = CarDetail.objects.filter(availability='Available').count()
+        booked_car_count = CarDetail.objects.filter(availability='Booked').count()
+        unlisted_car_count = CarDetail.objects.filter(availability='Unlisted').count()
+        total_bookings_count = CarOrder.objects.all().count()
+        approved_bookings_count = CarOrder.objects.filter(status='Approved').count()
+        pending_bookings_count = CarOrder.objects.filter(status='Pending').count()
+        paid_bookings_count = CarOrder.objects.filter(status='Paid').count()
+        completed_bookings_count = CarOrder.objects.filter(status='Completed').count()
+        recent_orders = CarOrder.objects.all()[:5]
+        car_details = CarDetail.objects.all()
+        car_orders = CarOrder.objects.all()
+
+        context = {
+            'total_car_count': total_car_count,
+            'available_car_count': available_car_count,
+            'booked_car_count': booked_car_count,
+            'unlisted_car_count': unlisted_car_count,
+            'total_bookings_count': total_bookings_count,
+            'approved_bookings_count': approved_bookings_count,
+            'pending_bookings_count': pending_bookings_count,
+            'paid_bookings_count': paid_bookings_count,
+            'completed_bookings_count': completed_bookings_count,
+            'recent_orders' : recent_orders,
+            'car_details': car_details,
+            'car_orders': car_orders,
+        }
+        return render(request, self.template_name, context)
+
+# ------------------------------------------------------------------------------------------------
+
 class UserDeleteView(DeleteView):
   template_name = 'users/admin_dashboard.html'
   model = User
