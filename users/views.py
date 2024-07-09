@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib import messages
 from django.views import View
@@ -11,6 +11,8 @@ from .forms import UserProfileForm, UserProfileCreateForm
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from cars.models import CarDetail, CarOrder
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 class LoginView(View):
@@ -94,6 +96,48 @@ class DistributorDashboardView(View):
             'car_orders': car_orders,
         }
         return render(request, self.template_name, context)
+
+# ------------------------------------------------------------------------------------------------
+
+class ApproveBookingsView(View):
+  template_name = 'users/distributor_dashboard.html'
+  success_url = reverse_lazy('distributor_dashboard')
+
+  def post(self, request, pk):
+    car_order = get_object_or_404(CarOrder, order_id=pk)
+
+    if car_order:
+      car_order.status = 'Approved'
+      car_order.save()
+
+      subject = "Car Booking Approved Successfully!!"
+      message = f"""Hello {car_order.rentee.user.username}:,
+
+We are excited to inform you that your order has been successfully approved!
+Please proceed with the payment to fully complete this booking request. After payment the car will be delivered according to your needs.
+
+Thank you for choosing VROOM-Car-Rental-Service. We are delighted to have you as a valued customer and look forward to providing you with an exceptional car rental experience.
+
+If you have any questions or need further assistance, please don't hesitate to reach out to our support team.
+
+Best regards,
+The VROOM-Car-Rental-Service Team
+"""
+
+      from_email = settings.EMAIL_HOST_USER
+      to_list = [car_order.rentee.user.email]
+      try:
+        send_mail(subject, message, from_email, to_list, fail_silently=False)
+        messages.success(request, "Order approved and email sent successfully!")
+      except Exception as e:
+        messages.error(request, f"Order approved, but failed to send email. Error: {str(e)}")
+
+      return redirect(self.success_url)
+    else:
+      messages.error(request, "Car order not found!")
+      return redirect(self.success_url)
+
+
 
 # ------------------------------------------------------------------------------------------------
 

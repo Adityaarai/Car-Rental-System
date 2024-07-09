@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users.forms import LoginForm
+from users.models import UserProfile
 
 
 # Create your views here.
@@ -50,7 +51,7 @@ class OrderCreateView(LoginRequiredMixin, View):
   def post(self, request, *args, **kwargs):
     current_url = request.get_full_path()
 
-    rentee = User.objects.get(username=request.user.username)
+    rentee = UserProfile.objects.get(user__username=request.user.username)
   
     renter_contact = request.POST.get('renter_contact')
     car_model = request.POST.get('car_model')

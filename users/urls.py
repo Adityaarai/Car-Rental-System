@@ -9,5 +9,6 @@ urlpatterns = [
   path('admin_dashboard/user/add/', UserCreateView.as_view(), name='add_user'),
   path('admin_dashboard/user/delete/<int:pk>/', UserDeleteView.as_view(), name='delete_user'),
   path('admin_dashboard/user/update/<int:pk>/', UserUpdateView.as_view(), name='update_user'),
-  path('distributor_dashboard/', DistributorDashboardView.as_view(), name='distributor_dashboard')
+  path('distributor_dashboard/', DistributorDashboardView.as_view(), name='distributor_dashboard'),
+  path('distributor_dashboard/order/approve/<int:pk>/', ApproveBookingsView.as_view(), name="approve_bookings")
 ]

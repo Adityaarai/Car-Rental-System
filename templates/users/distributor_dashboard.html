@@ -43,13 +43,11 @@
       <div class="content">
         {% if messages %} 
           {% for message in messages %} 
-            {% if message.tags == 'error' %}
-              <p class="error">{{ message }}</p>
-            {% endif %}
-            {% if message.tags == 'success' %}
-              <p class="success">{{ message }}</p>
-            {% endif %} 
-          {% endfor %} 
+            <div class="message {{ message.tags }}">
+              <span>{{ message }}</span>
+              <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+            </div>
+            {% endfor %} 
         {% endif %}
 
         <div id="default-content">
@@ -132,8 +130,6 @@
             <div class="cards-container">
               <!-- Cards will be dynamically added here -->
               {% for car_detail in car_details %}
-                
-
                 <div class="card">
                   <div
                     class="availability-container {% if car_detail.availability == 'Available' %}availability-available
@@ -144,10 +140,12 @@
                   </div>
                   <img src="{{ car_detail.image.url }}" alt="Car Image" />
                   <div class="card-text">
-                    <div class="card-details">
-                      <h2 class="car-model">{{ car_detail.car_model }}</h2>
-                      <!-- <h4 class="renter-name">{{ car_detail.renter_name }}</h4> -->
-                      <h3 class="car-type">{{ car_detail.car_type }}</h3>
+                    <div class="card-details"> 
+                      <h1 class="car-model">{{ car_detail.car_model }} </h1>
+                      <div class="row-flex">
+                        <p class="car-type">{{ car_detail.car_type }}</p>
+                        <p class="renter-name">- {{ car_detail.renter_name }}</p>
+                      </div>
                       <h4 class="car-price">Rs {{ car_detail.price }} / day</h4>
                     </div>
 
@@ -190,12 +188,14 @@
           <table>
             <thead>
               <tr>
-                <th>Order Id</th>
+                <th>Id</th>
                 <th>Product</th>
                 <th>Rentee</th>
+                <th>License</th>
                 <th>Booking Start Date</th>
                 <th>Booking End Date</th>
                 <th>Status</th>
+                <th></th>
                 <th></th>
               </tr>
             </thead>
@@ -205,19 +205,32 @@
                 <td>{{ order.order_id }}</td>
                 <td>{{ order.product }}</td>
                 <td>{{ order.rentee }}</td>
+                <td>
+                  {% if order.rentee.license_photo %}
+                  <a href="#" onclick="showImage('{{ order.rentee.license_photo.url }}')">View License</a>
+                  {% else %}
+                    Not Uploaded
+                  {% endif %}
+                </td>
                 <td>{{ order.start_date }}</td>
                 <td>{{ order.end_date }}</td>
                 <td>{{ order.status }}</td>
                 {% if order.status == 'Pending' %}
                 <td>
-                  <form method="post">
+                  <form method="post" action="{% url 'approve_bookings' order.order_id %}">
                     {% csrf_token %}
-                    <!-- Hidden inputs to include car model and renter name -->
-                    <input type="hidden" id="orderid" name="order_id" value="{{ order.order_id }}" />
-  
-                    <button type="submit" name="approve">Approve</button>
+                    <button type="submit" name="approve" id="approve-btn">Approve</button>
                   </form>
                 </td>
+                <td>
+                  <form method="post" action="">
+                    {% csrf_token %}
+                    <button type="submit" name="reject" id="reject-btn">Reject</button>
+                  </form>
+                </td>
+                {% else %}
+                  <td></td>
+                  <td></td>
                 {% endif %}
               </tr>
               {% endfor %}
@@ -363,6 +376,28 @@
     });
   };
 
+  function showImage(imageUrl) {
+    console.log(imageUrl);
+    // Create a modal container
+    var modal = document.createElement('div');
+    modal.classList.add('modal');
+
+    // Create image element
+    var img = document.createElement('img');
+    img.src = imageUrl;
+    img.alt = 'License Photo';
+
+    // Append image to modal
+    modal.appendChild(img);
+
+    // Append modal to body
+    document.body.appendChild(modal);
+
+    // Close modal when clicked outside image
+    modal.onclick = function() {
+      modal.remove();
+    };
+  }
 </script>
 
 <style>
@@ -565,9 +600,8 @@ table tr:nth-child(even) {
   background-color: var(--darkgray);
 }
 
-.card-text h2, h3, h4 {
+.card-text{
   margin: 0;
-  margin-top: 10px;
 }
 
 .availability-container {
@@ -605,18 +639,43 @@ table tr:nth-child(even) {
 }
 
 .card-details {
-  margin-top: 20px;
-  margin-left: 30px;
+  margin-top: 10px;
+  margin-left: 20px;
 }
 
 .car-price {
   font-size: 1.2rem;
+  margin: 7px 0 10px 0;
   font-weight: 450;
 }
 
 .car-model {
+  margin: 7px 0;
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: 600;
+}
+.car-type, .renter-name{
+  margin: 7px 0;
+}
+
+#approve-btn, #reject-btn{
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+#approve-btn{
+  background-color: var(--green);
+}
+#reject-btn{
+  background-color: var(--red);
 }
 
 .buttons {
@@ -710,83 +769,7 @@ table tr:nth-child(even) {
   background-color: var(--indigo);
 }
 
-/* Popup styles */
-.popup {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.popup-content {
-  background-color: var(--indigo);
-  color: var(--white);
-  border-radius: 20px;
-  width: 35%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 70px;
-  text-align: center;
-}
-
-.popup-content select {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  font-weight: 17px;
-  padding: 5px;
-}
-
-.close {
-  color: #aaa;
-  float: right;
-  margin-right: 20px;
-  margin-top: 20px;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.close:hover, .close:focus {
-  color: black;
-  text-decoration: none;
-}
-
-.popup-content form input {
-  margin-bottom: 20px;
-  width: 350px;
-  font-size: 25px;
-  border-radius: 5px;
-}
-
-.popup-content label {
-  font-weight: 600;
-  font-size: 25px;
-}
-
-.popup-content h2 {
-  margin-top: 50px;
-}
-
-.popup-content button {
-  width: 150px;
-  height: 30px;
-  border: 0;
-  border-radius: 5px;
-  background-color: var(--platinum);
-}
-
-.popup-content button:hover {
-  background-color: var(--lapis);
-  color: var(--white);
-}
-
-.error, .success{
+.message{
   color: var(--white);
   width: 30vw;
   height: 40px;
@@ -804,4 +787,38 @@ table tr:nth-child(even) {
   background-color: var(--green);
 }
 
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.row-flex{
+  display: flex;
+  flex-direction: row;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
 </style>

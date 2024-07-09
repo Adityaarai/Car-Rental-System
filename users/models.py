@@ -9,4 +9,4 @@ class UserProfile(models.Model):
   contact = models.CharField(max_length=100, null=True)
 
   def __str__(self):
-    return f'{self.user.username} - {self.user.email} - {self.user.get_full_name()}'
+    return f'{self.user.get_full_name()} - {self.user.email} - {self.contact}'
