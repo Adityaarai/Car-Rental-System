@@ -150,18 +150,10 @@
                     </div>
 
                     <div class="buttons">
-                      <form method="post">
+                      <form method="post" action="{% url 'update_cars' car_detail.car_id %}">
                         {% csrf_token %}
-                        <!-- Hidden inputs to include car model and renter name -->
-                        <input type="hidden" id="editCarModel" name="car_model" value="{{ car_detail.car_model }}" />
-                        <input type="hidden" id="editRenterName" name="renter_name" value="{{ car_detail.renter_name }}" />
-                        <button
-                          id="car-delete-btn"
-                          name="deleteCarDetails"
-                          type="submit"
-                        >
-                          Delete
-                        </button>
+                        
+                        <button type="submit" id="car-delete-btn" name="deleteCarDetails" onclick="return confirmDelete();">Delete</button>
                         <button type="submit" id="car-edit-btn" class="unlist" name="changeUnlisted">Unlist</button>
                         <button type="submit" id="car-edit-btn" class="list" name="changeAvailable">List</button>
                       </form>
@@ -223,12 +215,12 @@
                   </form>
                 </td>
                 <td>
-                  <form method="post" action="">
+                  <form method="post" action="{% url 'reject_bookings' order.order_id %}">
                     {% csrf_token %}
                     <button type="submit" name="reject" id="reject-btn">Reject</button>
                   </form>
                 </td>
-                {% else %}
+                {% else %}  
                   <td></td>
                   <td></td>
                 {% endif %}
@@ -245,6 +237,9 @@
 
 <script>
   // JavaScript to toggle content based on button clicks
+  function confirmDelete(){
+    return confirm("Are you sure you want to delete this car?");
+  }
 
   function toggleContent(topic) {
     document.getElementById("default-content").style.display =

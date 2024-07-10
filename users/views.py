@@ -137,7 +137,45 @@ The VROOM-Car-Rental-Service Team
       messages.error(request, "Car order not found!")
       return redirect(self.success_url)
 
+# ------------------------------------------------------------------------------------------------
 
+class RejectBookingsView(View):
+  template_name = 'users/distributor_dashboard.html'
+  success_url = reverse_lazy('distributor_dashboard')
+
+  def post(self, request, pk):
+    car_order = get_object_or_404(CarOrder, order_id=pk)
+
+    if car_order:
+      car_order.status = 'Rejected'
+      car_order.save()
+
+      subject = "Car Booking Rejected Unfortunately!!"
+      message = f"""Hello {car_order.rentee.user.username}:,
+
+We regret to inform you that your order has been rejected. Please check your license and contact details before trying again.
+We apologize for any inconvenience this may cause.
+
+Thank you for choosing VROOM-Car-Rental-Service. We value your patronage and look forward to serving you in the future.
+
+If you have any questions or need further assistance, please don't hesitate to reach out to our support team.
+
+Best regards,
+The VROOM-Car-Rental-Service Team
+"""
+
+      from_email = settings.EMAIL_HOST_USER
+      to_list = [car_order.rentee.user.email]
+      try:
+        send_mail(subject, message, from_email, to_list, fail_silently=False)
+        messages.success(request, "Order rejected and email sent successfully!")
+      except Exception as e:
+        messages.error(request, f"Order rejected, but failed to send email. Error: {str(e)}")
+
+      return redirect(self.success_url)
+    else:
+      messages.error(request, "Car order not found!")
+      return redirect(self.success_url)
 
 # ------------------------------------------------------------------------------------------------
 
@@ -145,6 +183,32 @@ class UserDeleteView(DeleteView):
   template_name = 'users/admin_dashboard.html'
   model = User
   success_url = reverse_lazy('admin_dashboard')
+
+# ------------------------------------------------------------------------------------------------
+
+
+class UpdateCarDetailsView(DeleteView):
+  template_name = 'users/distributor_dashboard.html'
+  success_url = reverse_lazy('distributor_dashboard')
+
+  def post(self, request, pk):
+    car_detail = get_object_or_404(CarDetail, car_id=pk)
+
+    if 'deleteCarDetails' in request.POST:
+      car_detail.delete()
+      messages.success(request, "Car detail deleted successfully!")
+    elif 'changeUnlisted' in request.POST:
+      car_detail.availability = 'Unlisted'
+      car_detail.save()
+      messages.success(request, 'Changed availability of car to Unlisted!')
+    elif 'changeAvailable' in request.POST:
+      car_detail.availability = 'Available'
+      car_detail.save()
+      messages.success(request, 'Changed availability of car to Available!')
+    else:
+      messages.error(request, "Unexpected error occured!")
+
+    return redirect(self.success_url)
 
 # ------------------------------------------------------------------------------------------------
 

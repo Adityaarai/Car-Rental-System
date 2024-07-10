@@ -14,6 +14,7 @@ STATUS = (
   ('Approved', 'Approved'),
   ('Paid', 'Paid'),
   ('Completed', 'Completed'),
+  ('Rejected', 'Rejected'),
 )
 
 AVAILABILITY = (
