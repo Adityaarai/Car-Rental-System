@@ -12,5 +12,6 @@ urlpatterns = [
   path('distributor_dashboard/', DistributorDashboardView.as_view(), name='distributor_dashboard'),
   path('distributor_dashboard/order/approve/<int:pk>/', ApproveBookingsView.as_view(), name='approve_bookings'),
   path('distributor_dashboard/order/reject/<int:pk>/', RejectBookingsView.as_view(), name='reject_bookings'),
-  path('distributor_dashboard/cars/update/<int:pk>/', UpdateCarDetailsView.as_view(), name='update_cars')
+  path('distributor_dashboard/cars/update/<int:pk>/', UpdateCarDetailsView.as_view(), name='update_cars'),
+  path('user_profile/', UserProfileView.as_view(), name='user_profile')
 ]

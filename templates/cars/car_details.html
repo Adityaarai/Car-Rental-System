@@ -37,6 +37,26 @@
             <form id="booking-form" method="post" action="{% url 'order_create' %}">
               {% csrf_token %}
 
+              <!-- hidden fields for identifying product -->
+              <input
+                type="hidden"
+                id="renter_contact"
+                name="renter_contact"
+                value="{{ detail.renter_contact }}"
+              />
+              <input
+                type="hidden"
+                id="car_model"
+                name="car_model"
+                value="{{ detail.car_model }}"
+              />
+              <input
+                type="hidden"
+                id="renter_name"
+                name="renter_name"
+                value="{{ detail.renter_name }}"
+              />
+
               <!-- Date and Time Picker -->
               <label for="bookingStartDate">Booking Start Date:</label><br />
               <input

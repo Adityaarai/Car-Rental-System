@@ -1,4 +1,4 @@
-{% extends 'partials/base.html' %} 
+{% extends 'base.html' %} 
 {% load static %} 
 {% block title %} VROOM - User profile{% endblock %} 
 
@@ -33,26 +33,26 @@
     <div id="profileSection" class="section">
       <h3>Profile Information</h3>
       <p style="margin-top: 20px; margin-bottom: 10px">
-        First Name: <span id="firstName">{{ user.first_name }}</span>
+        First Name: <span id="firstName">{{ user_profile.user.first_name }}</span>
       </p>
       <p style="margin-bottom: 10px">
-        Last Name: <span id="lastName">{{ user.last_name }}</span>
+        Last Name: <span id="lastName">{{ user_profile.user.last_name }}</span>
       </p>
       <p style="margin-bottom: 10px">
-        Username: <span id="username">{{ user.username }}</span>
+        Username: <span id="username">{{ user_profile.user.username }}</span>
       </p>
       <p style="margin-bottom: 10px">
-        Email: <span id="email">{{ user.email }}</span>
+        Email: <span id="email">{{ user_profile.user.email }}</span>
       </p>
       <p style="margin-bottom: 10px">
-        Address: <span id="address">{{ profile.address }}</span>
+        Address: <span id="address">{{ user_profile.address }}</span>
       </p>
       <p style="margin-bottom: 10px">
         License Number:
-        <span id="licenseNumber">{{ profile.license_number }}</span>
+        <span id="licenseNumber">{{ user_profile.license_photo.url }}</span>
       </p>
       <p style="margin-bottom: 10px">
-        Contact Number: <span id="contactNumber">{{ profile.contact }}</span>
+        Contact Number: <span id="contactNumber">{{ user_profile.contact }}</span>
       </p>
 
       <button class="button" id="editProfileBtn">Edit Profile</button>
@@ -105,7 +105,7 @@
             type="text"
             id="editAddress"
             name="address"
-            value="{{ profile.address }}"
+            value="{{ user_profile.address }}"
           />
           <br />
 
@@ -123,7 +123,7 @@
             type="text"
             id="editContact"
             name="contact"
-            value="{{ profile.contact }}"
+            value="{{ user_profile.contact }}"
           />
           <br />
 
@@ -184,7 +184,7 @@
         <form
           id="addCarForm"
           method="POST"
-          action="{% url 'add_car' %}"
+          action=""
           enctype="multipart/form-data"
         >
           {% csrf_token %}
@@ -265,7 +265,7 @@
         >
         <h2>Remove Car</h2>
         <p>Are you sure you want to remove this car?</p>
-        <form id="removeCarForm" method="POST" action="{% url 'remove_car' %}">
+        <form id="removeCarForm" method="POST" action="">
           {% csrf_token %}
           <input type="hidden" name="car_id" id="carIdInput" />
           <button type="submit">Yes</button>

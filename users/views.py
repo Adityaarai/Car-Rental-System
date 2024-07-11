@@ -46,7 +46,7 @@ class LoginView(View):
 # ------------------------------------------------------------------------------------------------
 
 class AdminDashboardView(View):
-    template_name = 'users/admin_dashboard.html'
+    template_name = 'users/admin/admin_dashboard.html'
 
     def get(self, request):
         total_distributor_count = UserProfile.objects.filter(user__is_staff=True, user__is_superuser=False).count()
@@ -64,8 +64,34 @@ class AdminDashboardView(View):
 
 # ------------------------------------------------------------------------------------------------
 
+class UserProfileView(View):
+    template_name = 'users/user/user_profile.html'
+
+    def get(self, request):
+      user = request.user
+      user_profile = UserProfile.objects.get(user=user)
+
+      user_cars = CarDetail.objects.filter(renter_name=user.get_full_name())
+      pending_bookings = CarOrder.objects.filter(rentee=user_profile, status='Pending')
+      approved_bookings = CarOrder.objects.filter(rentee=user_profile, status='Approved')
+      paid_bookings = CarOrder.objects.filter(rentee=user_profile, status='Paid')
+      completed_bookings = CarOrder.objects.filter(rentee=user_profile, status='Completed')
+
+      context = {
+        'user_profile': user_profile,
+        'user_cars': user_cars,
+        'pending_bookings': pending_bookings,
+        'approved_bookings': approved_bookings,
+        'paid_bookings': paid_bookings,
+        'completed_bookings': completed_bookings
+      }
+
+      return render(request, self.template_name, context)
+
+# ------------------------------------------------------------------------------------------------
+
 class DistributorDashboardView(View):
-    template_name = 'users/distributor_dashboard.html'
+    template_name = 'users/distributor/distributor_dashboard.html'
 
     def get(self, request):
         total_car_count = CarDetail.objects.all().count()
@@ -77,6 +103,7 @@ class DistributorDashboardView(View):
         pending_bookings_count = CarOrder.objects.filter(status='Pending').count()
         paid_bookings_count = CarOrder.objects.filter(status='Paid').count()
         completed_bookings_count = CarOrder.objects.filter(status='Completed').count()
+        rejected_bookings_count = CarOrder.objects.filter(status='Rejected').count()
         recent_orders = CarOrder.objects.all()[:5]
         car_details = CarDetail.objects.all()
         car_orders = CarOrder.objects.all()
@@ -91,6 +118,7 @@ class DistributorDashboardView(View):
             'pending_bookings_count': pending_bookings_count,
             'paid_bookings_count': paid_bookings_count,
             'completed_bookings_count': completed_bookings_count,
+            'rejected_bookings_count': rejected_bookings_count,
             'recent_orders' : recent_orders,
             'car_details': car_details,
             'car_orders': car_orders,
@@ -100,7 +128,7 @@ class DistributorDashboardView(View):
 # ------------------------------------------------------------------------------------------------
 
 class ApproveBookingsView(View):
-  template_name = 'users/distributor_dashboard.html'
+  template_name = 'users/distributor/distributor_dashboard.html'
   success_url = reverse_lazy('distributor_dashboard')
 
   def post(self, request, pk):
@@ -140,7 +168,7 @@ The VROOM-Car-Rental-Service Team
 # ------------------------------------------------------------------------------------------------
 
 class RejectBookingsView(View):
-  template_name = 'users/distributor_dashboard.html'
+  template_name = 'users/distributor/distributor_dashboard.html'
   success_url = reverse_lazy('distributor_dashboard')
 
   def post(self, request, pk):
@@ -180,7 +208,7 @@ The VROOM-Car-Rental-Service Team
 # ------------------------------------------------------------------------------------------------
 
 class UserDeleteView(DeleteView):
-  template_name = 'users/admin_dashboard.html'
+  template_name = 'users/admin/admin_dashboard.html'
   model = User
   success_url = reverse_lazy('admin_dashboard')
 
@@ -188,7 +216,7 @@ class UserDeleteView(DeleteView):
 
 
 class UpdateCarDetailsView(DeleteView):
-  template_name = 'users/distributor_dashboard.html'
+  template_name = 'users/distributor/distributor_dashboard.html'
   success_url = reverse_lazy('distributor_dashboard')
 
   def post(self, request, pk):
@@ -215,7 +243,7 @@ class UpdateCarDetailsView(DeleteView):
 class UserUpdateView(UpdateView):
     model = UserProfile
     form_class = UserProfileForm
-    template_name = 'users/update_user.html'
+    template_name = 'users/admin/update_user.html'
     success_url = reverse_lazy('admin_dashboard')
 
     def get_context_data(self, **kwargs):
@@ -228,7 +256,7 @@ class UserUpdateView(UpdateView):
 class UserCreateView(CreateView):
     model = User
     form_class = UserProfileCreateForm
-    template_name = 'users/add_user.html'
+    template_name = 'users/admin/add_user.html'
     success_url = reverse_lazy('admin_dashboard')
 
     def form_valid(self, form):

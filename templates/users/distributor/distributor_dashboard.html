@@ -75,10 +75,13 @@
                 <p id="Booking">Total bookings: {{ total_bookings_count }}</p>
               </label>
               <label id="Bookings">
+                <p id="Pending">Pending bookings: {{ pending_bookings_count }}</p>
+              </label>
+              <label id="Bookings">
                 <p id="Approved">Approved bookings: {{ approved_bookings_count }}</p> 
               </label>
               <label id="Bookings">
-                <p id="Pending">Pending bookings: {{ pending_bookings_count }}</p>
+                <p id="Rejected">Rejected bookings: {{ rejected_bookings_count }}</p> 
               </label>
               <label id="Bookings">
                 <p id="Paid">Paid bookings: {{ paid_bookings_count }}</p> 
@@ -521,7 +524,7 @@ table tr:nth-child(even) {
 .car_card h3, .booking_card h3 {
   font-size: 30px;
   margin-top: 30px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 #Bookings, #Cars {
@@ -534,7 +537,7 @@ table tr:nth-child(even) {
 
 #car_card, #book_card {
   width: 40vw;
-  height: 30vh;
+  height: 37vh;
 }
 
 #car_card {

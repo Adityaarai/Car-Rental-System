@@ -17,7 +17,7 @@
             <ul class="dropdown-menu">
               {% if user.is_authenticated %}
                 {% if not user.is_staff %}
-                <li><a href="">My Profile</a></li>
+                <li><a href="{% url 'user_profile' %}">My Profile</a></li>
                 {% endif %}
                 {% if user.is_staff and user.is_superuser %}
                 <li><a href="{% url 'admin_dashboard' %}">Admin Dashboard</a></li>
