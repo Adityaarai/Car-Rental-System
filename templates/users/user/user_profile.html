@@ -48,16 +48,20 @@
         Address: <span id="address">{{ user_profile.address }}</span>
       </p>
       <p style="margin-bottom: 10px">
-        License Number:
-        <span id="licenseNumber">{{ user_profile.license_photo.url }}</span>
+        License Photo:
+        <span id="licenseNumber">
+          {% if user_profile.license_photo %}
+            <a href="#" onclick="showImage('{{ user_profile.license_photo.url }}')">View License</a>
+          {% else %}
+            Not Uploaded
+          {% endif %}
+        </span>
       </p>
       <p style="margin-bottom: 10px">
         Contact Number: <span id="contactNumber">{{ user_profile.contact }}</span>
       </p>
 
       <button class="button" id="editProfileBtn">Edit Profile</button>
-      <button id="car-add-btn">Add Car</button>
-      <button id="removeCarBtn">Remove Car</button>
 
       <div id="editProfileForm" style="display: none">
         <!-- Edit Profile form -->
@@ -73,7 +77,7 @@
             type="text"
             id="editFirstName"
             name="first_name"
-            value="{{ user.first_name }}"
+            value="{{ user_profile.user.first_name }}"
           /><br />
 
           <label for="editLastName">Last Name:</label>
@@ -81,7 +85,7 @@
             type="text"
             id="editLastName"
             name="last_name"
-            value="{{ user.last_name }}"
+            value="{{ user_profile.user.last_name }}"
           /><br />
 
           <label for="editUsername">Username:</label>
@@ -89,7 +93,7 @@
             type="text"
             id="editUsername"
             name="username"
-            value="{{ user.username }}"
+            value="{{ user_profile.user.username }}"
           /><br />
 
           <label for="editEmail">Email:</label>
@@ -97,7 +101,7 @@
             type="email"
             id="editEmail"
             name="email"
-            value="{{ user.email }}"
+            value="{{ user_profile.user.email }}"
           /><br />
 
           <label for="editAddress">Address:</label>
@@ -109,12 +113,12 @@
           />
           <br />
 
-          <label for="editLicenseNumber">License Number:</label>
+          <label for="editLicenseNumber">License Photo:</label>
+          <img src="{{ user_profile.license_photo.url }}" alt="">
           <input
-            type="text"
+            type="file"
             id="editLicenseNumber"
             name="license_number"
-            value="{{ profile.license_number }}"
           />
           <br />
 
@@ -315,6 +319,8 @@
       {% else %}
       <p>You haven't added any cars yet.</p>
       {% endif %}
+      <button id="car-add-btn">Add Car</button>
+      <button id="removeCarBtn">Remove Car</button>
     </div>
 
     <!--Pending Bookings Section-->
@@ -437,6 +443,29 @@
   </div>
 
   <script>
+    function showImage(imageUrl) {
+    console.log(imageUrl);
+    // Create a modal container
+    var modal = document.createElement('div');
+    modal.classList.add('modal');
+
+    // Create image element
+    var img = document.createElement('img');
+    img.src = imageUrl;
+    img.alt = 'License Photo';
+
+    // Append image to modal
+    modal.appendChild(img);
+
+    // Append modal to body
+    document.body.appendChild(modal);
+
+    // Close modal when clicked outside image
+    modal.onclick = function() {
+      modal.remove();
+    };
+  }
+
     function closePopup(id) {
       document.getElementById(id).style.display = "none";
     }
@@ -1037,6 +1066,28 @@
     #completedBookingDetailsTable {
       margin-top: 15px;
     }
+
+    .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
   </style>
-  {% endblock %}
+
+
 </div>
+{% endblock %}

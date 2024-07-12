@@ -159,7 +159,7 @@ button:hover {
     <div class="right-panel">
   
       <h2>Update User</h2>
-      <form id="user-update-form" method="post">
+      <form id="user-update-form" method="post" novalidate>
         {% csrf_token %}
         {{ form.as_p }}
         <div class="button-container">

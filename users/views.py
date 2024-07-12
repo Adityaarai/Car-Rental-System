@@ -22,6 +22,7 @@ class LoginView(View):
 
     def get(self, request):
         form = self.form_class(initial=self.initial)
+        messages.error(request, "Please login to book cars.")
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
@@ -250,6 +251,11 @@ class UserUpdateView(UpdateView):
         context = super(UserUpdateView, self).get_context_data(**kwargs)
         context['user_detail'] = self.object
         return context
+
+    def get_form_kwargs(self):
+        kwargs = super(UserUpdateView, self).get_form_kwargs()
+        kwargs['user_detail'] = self.object
+        return kwargs
 
 # ------------------------------------------------------------------------------------------------
 
