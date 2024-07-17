@@ -17,7 +17,7 @@ STATUS = (
   ('Rejected', 'Rejected'),
 )
 
-AVAILABILITY = (
+AVAILABILITY = (-
   ('Unlisted', 'Unlisted'),
   ('Booked', 'Booked'),
   ('Available', 'Available'),

@@ -23,6 +23,7 @@
                 <li><a href="{% url 'admin_dashboard' %}">Admin Dashboard</a></li>
                 {% endif %}
                 {% if user.is_staff and not user.is_superuser %}
+                <li><a href="{% url 'user_profile' %}">My Profile</a></li>
                 <li><a href="{% url 'distributor_dashboard' %}">Distributor Dashboard</a></li>
                 {% endif %}
                 <li><a href="{% url 'logout' %}">Logout</a></li>

@@ -22,7 +22,6 @@ class LoginView(View):
 
     def get(self, request):
         form = self.form_class(initial=self.initial)
-        messages.error(request, "Please login to book cars.")
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
@@ -38,7 +37,7 @@ class LoginView(View):
                 if user.is_staff and user.is_superuser:
                   return redirect('admin_dashboard')
                 if user.is_staff and not user.is_superuser:
-                  return redirect('distributor_dashboard')
+                  return redirect('index')
                 return redirect('index')  
             else:
                 messages.error(request, 'Unable to login. Please check your credentials.')
@@ -259,6 +258,34 @@ class UserUpdateView(UpdateView):
 
 # ------------------------------------------------------------------------------------------------
 
+class DistributorCreateView(CreateView):
+    model = User
+    form_class = UserProfileCreateForm
+    template_name = 'users/admin/add_distributor.html'
+    success_url = reverse_lazy('admin_dashboard')
+
+    def form_valid(self, form):
+        user = form.save()
+
+        user_email = form.cleaned_data['email']
+        user.is_staff = True  
+        
+        car_detail_content_type = ContentType.objects.get_for_model(CarDetail)
+        car_detail_permissions = Permission.objects.filter(content_type=car_detail_content_type)
+
+        car_order_content_type = ContentType.objects.get_for_model(CarOrder)
+        car_order_permissions = Permission.objects.filter(content_type=car_order_content_type)
+
+        all_permissions = car_detail_permissions | car_order_permissions
+        user.user_permissions.add(*all_permissions)
+
+        user.save()
+
+        messages.success(self.request, "Distributor added successfully!!")
+        return super().form_valid(form)
+
+# ------------------------------------------------------------------------------------------------
+
 class UserCreateView(CreateView):
     model = User
     form_class = UserProfileCreateForm
@@ -266,27 +293,11 @@ class UserCreateView(CreateView):
     success_url = reverse_lazy('admin_dashboard')
 
     def form_valid(self, form):
-        # Save the user instance from the form
         user = form.save()
-
-        # Example logic to assign permissions if email matches a specific domain
-        user_email = form.cleaned_data['email']
-        if '.vroom@gmail.com' in user_email:
-            user.is_staff = True  # Example: Make user staff
-            # Example: Assign permissions for specific models
-            car_detail_content_type = ContentType.objects.get_for_model(CarDetail)
-            car_detail_permissions = Permission.objects.filter(content_type=car_detail_content_type)
-
-            car_order_content_type = ContentType.objects.get_for_model(CarOrder)
-            car_order_permissions = Permission.objects.filter(content_type=car_order_content_type)
-
-            all_permissions = car_detail_permissions | car_order_permissions
-            user.user_permissions.add(*all_permissions)
-
         user.save()
-
         messages.success(self.request, "User added successfully!!")
         return super().form_valid(form)
+
 # ------------------------------------------------------------------------------------------------
 
 class SignupView(View):
@@ -325,7 +336,6 @@ class SignupView(View):
 class LogoutView(View):
   def get(self, request):
     logout(request)
-    messages.success(request, 'You have successfully logged out!!')
     return redirect('index')
 
 # ------------------------------------------------------------------------------------------------

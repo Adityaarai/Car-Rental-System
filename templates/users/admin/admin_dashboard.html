@@ -110,7 +110,7 @@
           <h2>Distributor Information</h2>
 
           <!-- buttons to add distributor -->
-          <a href="{% url 'add_user' %}" id="distributor-add-btn">Add Distributor</a>
+          <a href="{% url 'add_distributor' %}" id="distributor-add-btn">Add Distributor</a>
           
           <!-- table to show distributor information -->
           <table>
@@ -124,7 +124,7 @@
               <th></th>
             </tr>
             {% for user_detail in user_details %} 
-              {% if '.vroom@gmail.com' in user_detail.user.email and user_detail.user.is_staff %}
+              {% if not user_detail.user.is_superuser and user_detail.user.is_staff %}
                 <tr>
                   <td>{{ user_detail.user.username }}</td>
                   <td>{{ user_detail.user.email }}</td>

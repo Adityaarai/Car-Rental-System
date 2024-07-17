@@ -61,11 +61,11 @@
         Contact Number: <span id="contactNumber">{{ user_profile.contact }}</span>
       </p>
 
-      <button class="button" id="editProfileBtn">Edit Profile</button>
+      <!-- <button class="button" id="editProfileBtn">Edit Profile</button>
 
-      <div id="editProfileForm" style="display: none">
+      <div id="editProfileForm" style="display: none"> -->
         <!-- Edit Profile form -->
-        <form
+        <!-- <form
           id="updateProfileForm"
           method="POST"
           action="{% url 'user_profile' %}"
@@ -114,13 +114,18 @@
           <br />
 
           <label for="editLicenseNumber">License Photo:</label>
-          <img src="{{ user_profile.license_photo.url }}" alt="">
+          {% if user_profile.license_photo %}
+            <img src="{{ user_profile.license_photo.url }}" alt="">
+          {% else %}
+            No file uploaded
+          {% endif %}
           <input
             type="file"
             id="editLicenseNumber"
             name="license_number"
           />
           <br />
+
 
           <label for="editContact">Contact Number:</label>
           <input
@@ -134,8 +139,12 @@
           <span id="contactError" style="color: red; display: none"
             >Contact number must be a 10-digit number.</span
           ><br />
-          <!-- Error message -->
+           Error message 
           <button class="button" type="submit">Update Profile</button>
+        </form> -->
+        <form method="post" action="{% url 'update_user' user_profile.id %}">
+          {% csrf_token %}
+          <button type="submit" id="user-edit-btn">Update</button>
         </form>
       </div>
     </div>

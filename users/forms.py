@@ -94,7 +94,7 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ['username', 'email', 'first_name', 'last_name', 'address', 'contact']
+        fields = ['username', 'email', 'first_name', 'last_name', 'address', 'contact', 'license_photo']
 
     def __init__(self, *args, **kwargs):
         user_detail = kwargs.pop('user_detail', None)
