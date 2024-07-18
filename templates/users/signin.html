@@ -10,24 +10,26 @@
 
   <div class="right-panel" style="margin-right: 210px">
     <!-- login block -->
-    <h2>Login</h2>
+    <h2 id="login-title">Login</h2>
     <form id="signin-form" method="post">
       {% csrf_token %}
       {{ form.as_p }}
 
       <div class="form-group">
         <a href="">Forgot your password?</a>
+        <br>
+        <a href="" id="distributor-login-link">Login as a Distributor</a>
+        <a href="" id="user-login-link" style="display: none;">Login as a User</a>
       </div>
-
-      <button type="submit">Sign In</button>
-
-      <div class="signup-link">
-        <p>
-          Don't have an account yet?
-          <a class="title" href="{% url 'signup' %}"><button type="button">Sign Up</button></a>
-        </p>
-      </div>
+      <button type="submit" id="login-button" name="user-login">Sign In</button>
     </form>
+    <br>
+    <div class="signup-link">
+      <p>
+        Don't have an account yet?
+        <a class="title" href="{% url 'signup' %}"><button type="button">Sign Up</button></a>
+      </p>
+    </div>
  
     <div class="message">
       {% for message in messages %} 
@@ -140,4 +142,19 @@
     word-wrap: break-word;
   }
 </style>
+<script>
+  document.getElementById('distributor-login-link').addEventListener('click', function(event) {
+    event.preventDefault();
+    document.getElementById('login-button').name = 'distributor-login';
+    document.getElementById('distributor-login-link').style.display = 'none';
+    document.getElementById('user-login-link').style.display = 'block';
+  });
+
+  document.getElementById('user-login-link').addEventListener('click', function(event) {
+    event.preventDefault();
+    document.getElementById('login-button').name = 'user-login';
+    document.getElementById('user-login-link').style.display = 'none';
+    document.getElementById('distributor-login-link').style.display = 'block';
+  });
+</script>
 {% endblock %}

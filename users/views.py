@@ -36,9 +36,13 @@ class LoginView(View):
                 auth_login(request, user)
                 if user.is_staff and user.is_superuser:
                   return redirect('admin_dashboard')
-                if user.is_staff and not user.is_superuser:
-                  return redirect('index')
-                return redirect('index')  
+                elif user.is_staff and not user.is_superuser:
+                  if 'distributor-login' in request.POST:
+                    return redirect('distributor_dashboard')
+                  elif 'user-login' in request.POST:
+                    return redirect('index')
+                else:
+                  return redirect('index')  
             else:
                 messages.error(request, 'Unable to login. Please check your credentials.')
         return render(request, self.template_name, {'form': form})
