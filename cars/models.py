@@ -27,8 +27,7 @@ AVAILABILITY = (
 # Create your models here.
 class CarDetail(models.Model):
     car_id = models.AutoField(primary_key=True)
-    renter_name = models.CharField(max_length=100, null=True)
-    renter_contact = models.CharField(max_length=10, null=True)
+    renter = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING)
     car_type = models.CharField(max_length=100, choices=CAR_TYPE, null=True)
     car_model = models.CharField(max_length=100, null=True)
     price = models.DecimalField(decimal_places=2, max_digits=10, null=True)
@@ -37,7 +36,7 @@ class CarDetail(models.Model):
 
     # display what is shown in the product name
     def __str__(self):
-        return f'{self.car_model} - {self.renter_name} '
+        return f'{self.car_model} - {self.renter} '
 
 # car orders table model
 class CarOrder(models.Model):

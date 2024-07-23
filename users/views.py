@@ -13,6 +13,7 @@ from django.contrib.contenttypes.models import ContentType
 from cars.models import CarDetail, CarOrder
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils.http import url_has_allowed_host_and_scheme
 
 # Create your views here.
 class LoginView(View):
@@ -75,7 +76,7 @@ class UserProfileView(View):
       user = request.user
       user_profile = UserProfile.objects.get(user=user)
 
-      user_cars = CarDetail.objects.filter(renter_name=user.get_full_name())
+      user_cars = CarDetail.objects.filter(renter=user_profile)
       pending_bookings = CarOrder.objects.filter(rentee=user_profile, status='Pending')
       approved_bookings = CarOrder.objects.filter(rentee=user_profile, status='Approved')
       paid_bookings = CarOrder.objects.filter(rentee=user_profile, status='Paid')
@@ -98,19 +99,22 @@ class DistributorDashboardView(View):
     template_name = 'users/distributor/distributor_dashboard.html'
 
     def get(self, request):
-        total_car_count = CarDetail.objects.all().count()
-        available_car_count = CarDetail.objects.filter(availability='Available').count()
-        booked_car_count = CarDetail.objects.filter(availability='Booked').count()
-        unlisted_car_count = CarDetail.objects.filter(availability='Unlisted').count()
-        total_bookings_count = CarOrder.objects.all().count()
-        approved_bookings_count = CarOrder.objects.filter(status='Approved').count()
-        pending_bookings_count = CarOrder.objects.filter(status='Pending').count()
-        paid_bookings_count = CarOrder.objects.filter(status='Paid').count()
-        completed_bookings_count = CarOrder.objects.filter(status='Completed').count()
-        rejected_bookings_count = CarOrder.objects.filter(status='Rejected').count()
-        recent_orders = CarOrder.objects.all()[:5]
-        car_details = CarDetail.objects.all()
-        car_orders = CarOrder.objects.all()
+        user = request.user
+
+        user_profile = UserProfile.objects.get(user=user)
+        total_car_count = CarDetail.objects.filter(renter=user_profile).count()
+        available_car_count = CarDetail.objects.filter(availability='Available', renter=user_profile).count()
+        booked_car_count = CarDetail.objects.filter(availability='Booked', renter=user_profile).count()
+        unlisted_car_count = CarDetail.objects.filter(availability='Unlisted', renter=user_profile).count()
+        total_bookings_count = CarOrder.objects.filter(rentee=user_profile).count()
+        approved_bookings_count = CarOrder.objects.filter(status='Approved', rentee=user_profile).count()
+        pending_bookings_count = CarOrder.objects.filter(status='Pending', rentee=user_profile).count()
+        paid_bookings_count = CarOrder.objects.filter(status='Paid', rentee=user_profile).count()
+        completed_bookings_count = CarOrder.objects.filter(status='Completed', rentee=user_profile).count()
+        rejected_bookings_count = CarOrder.objects.filter(status='Rejected', rentee=user_profile).count()
+        recent_orders = CarOrder.objects.filter(rentee=user_profile)[:5]
+        car_details = CarDetail.objects.filter(renter=user_profile)
+        car_orders = CarOrder.objects.filter(rentee=user_profile)
 
         context = {
             'total_car_count': total_car_count,
@@ -248,7 +252,7 @@ class UserUpdateView(UpdateView):
     model = UserProfile
     form_class = UserProfileForm
     template_name = 'users/admin/update_user.html'
-    success_url = reverse_lazy('admin_dashboard')
+    success_url = reverse_lazy('index')
 
     def get_context_data(self, **kwargs):
         context = super(UserUpdateView, self).get_context_data(**kwargs)
@@ -259,6 +263,13 @@ class UserUpdateView(UpdateView):
         kwargs = super(UserUpdateView, self).get_form_kwargs()
         kwargs['user_detail'] = self.object
         return kwargs
+    
+    def get_success_url(self):
+        referer = self.request.META.get('HTTP_REFERER')
+
+        if referer and url_has_allowed_host_and_scheme(referer, allowed_hosts={self.request.get_host()}):
+          return referer
+        return super(UserUpdateView, self).get_success_url()
 
 # ------------------------------------------------------------------------------------------------
 

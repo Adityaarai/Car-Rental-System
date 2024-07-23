@@ -10,7 +10,7 @@
 
   <div class="right-panel" style="margin-right: 210px">
     <!-- login block -->
-    <h2 id="login-title">Login</h2>
+    <h2 id="login-title">Login as User</h2>
     <form id="signin-form" method="post">
       {% csrf_token %}
       {{ form.as_p }}
@@ -145,6 +145,7 @@
 <script>
   document.getElementById('distributor-login-link').addEventListener('click', function(event) {
     event.preventDefault();
+    document.getElementById('login-title').innerHTML = 'Login as Distributor';
     document.getElementById('login-button').name = 'distributor-login';
     document.getElementById('distributor-login-link').style.display = 'none';
     document.getElementById('user-login-link').style.display = 'block';
@@ -152,6 +153,7 @@
 
   document.getElementById('user-login-link').addEventListener('click', function(event) {
     event.preventDefault();
+    document.getElementById('login-title').innerHTML = 'Login as User';
     document.getElementById('login-button').name = 'user-login';
     document.getElementById('user-login-link').style.display = 'none';
     document.getElementById('distributor-login-link').style.display = 'block';
