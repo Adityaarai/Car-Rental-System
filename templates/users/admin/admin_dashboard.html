@@ -44,6 +44,14 @@
             </a>
           </li>
           <li>
+            <a id="distributor-request-btn" onclick="toggleContent('distributorRequest')">
+              <!-- Added onclick function -->
+              <i class="fas fa-user-plus"></i>
+              <span id="user-topic">Requests</span>
+              <!-- Unique ID -->
+            </a>
+          </li>
+          <li>
             <a href="{% url 'logout' %}" id="logout">
               <i class="fas fa-sign-out-alt"></i>
               <span id="topic">Log Out</span>
@@ -198,10 +206,12 @@
               {% endif %} 
             {% endfor %}
           </table>
-
-        
-
         </div>
+
+        <div id="request-content">
+          <h2>Distributor Requests</h2>
+        </div>
+
       </div>
     </div>
   </body>
@@ -216,6 +226,8 @@
       topic === "distributor" ? "block" : "none";
     document.getElementById("user-content").style.display =
       topic === "user" ? "block" : "none";
+    document.getElementById("request-content").style.display = 
+      topic === "distributorRequest" ? "block" : "none";
   }
 
   // confirm user deletion
@@ -416,7 +428,8 @@
 
   #default-content,
   #distributor-content,
-  #user-content {
+  #user-content,
+  #request-content{
     right: 0;
     display: none;
     margin-top: 20px;

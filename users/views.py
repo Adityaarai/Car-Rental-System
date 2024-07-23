@@ -54,6 +54,11 @@ class AdminDashboardView(View):
     template_name = 'users/admin/admin_dashboard.html'
 
     def get(self, request):
+        user = request.user
+
+        if not user.is_superuser:
+          return redirect('index')
+
         total_distributor_count = UserProfile.objects.filter(user__is_staff=True, user__is_superuser=False).count()
         total_user_count = UserProfile.objects.filter(user__is_staff=False).count()
         recent_users = UserProfile.objects.filter(user__is_staff=False).order_by('-user__date_joined')[:5]
@@ -106,15 +111,15 @@ class DistributorDashboardView(View):
         available_car_count = CarDetail.objects.filter(availability='Available', renter=user_profile).count()
         booked_car_count = CarDetail.objects.filter(availability='Booked', renter=user_profile).count()
         unlisted_car_count = CarDetail.objects.filter(availability='Unlisted', renter=user_profile).count()
-        total_bookings_count = CarOrder.objects.filter(rentee=user_profile).count()
-        approved_bookings_count = CarOrder.objects.filter(status='Approved', rentee=user_profile).count()
-        pending_bookings_count = CarOrder.objects.filter(status='Pending', rentee=user_profile).count()
-        paid_bookings_count = CarOrder.objects.filter(status='Paid', rentee=user_profile).count()
-        completed_bookings_count = CarOrder.objects.filter(status='Completed', rentee=user_profile).count()
-        rejected_bookings_count = CarOrder.objects.filter(status='Rejected', rentee=user_profile).count()
-        recent_orders = CarOrder.objects.filter(rentee=user_profile)[:5]
+        total_bookings_count = CarOrder.objects.filter(product__renter=user_profile).count()
+        approved_bookings_count = CarOrder.objects.filter(status='Approved', product__renter=user_profile).count()
+        pending_bookings_count = CarOrder.objects.filter(status='Pending', product__renter=user_profile).count()
+        paid_bookings_count = CarOrder.objects.filter(status='Paid', product__renter=user_profile).count()
+        completed_bookings_count = CarOrder.objects.filter(status='Completed', product__renter=user_profile).count()
+        rejected_bookings_count = CarOrder.objects.filter(status='Rejected', product__renter=user_profile).count()
+        recent_orders = CarOrder.objects.filter(product__renter=user_profile)[:5]
         car_details = CarDetail.objects.filter(renter=user_profile)
-        car_orders = CarOrder.objects.filter(rentee=user_profile)
+        car_orders = CarOrder.objects.filter(product__renter=user_profile)
 
         context = {
             'total_car_count': total_car_count,

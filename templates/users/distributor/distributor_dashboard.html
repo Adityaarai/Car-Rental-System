@@ -32,8 +32,8 @@
           </li>
           <li>
             <a href="{% url 'user_profile' %}">
-              <i class="fa-solid fa-repeat"></i>
-                <span id="user-topic">User mode</span>
+              <i class="fas fa-repeat"></i>
+              <span id="user-topic">User mode</span>
             </a>
           </li>
 
@@ -258,6 +258,7 @@
       topic === "car" ? "block" : "none";
     document.getElementById("booking-content").style.display =
       topic === "booking" ? "block" : "none";
+
 
     if (topic === "car"){
       setupCarContent();
