@@ -23,6 +23,8 @@ AVAILABILITY = (
   ('Available', 'Available'),
 )
 
+def car_blue_book_path(instance, filename):
+    return f'static/car_blue_books/{instance.renter.user.get_full_name()}/{filename}'
 
 # Create your models here.
 class CarDetail(models.Model):
@@ -32,6 +34,7 @@ class CarDetail(models.Model):
     car_model = models.CharField(max_length=100, null=True)
     price = models.DecimalField(decimal_places=2, max_digits=10, null=True)
     availability = models.CharField(max_length=20, choices=AVAILABILITY, null=True, default='Available')
+    blue_book = models.ImageField(upload_to = car_blue_book_path, blank=True)
     image = models.ImageField(default='static/images/lambo.jpg', upload_to='static/car_images')
 
     # display what is shown in the product name

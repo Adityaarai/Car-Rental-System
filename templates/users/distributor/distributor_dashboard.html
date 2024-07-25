@@ -154,7 +154,7 @@
                       <h1 class="car-model">{{ car_detail.car_model }} </h1>
                       <div class="row-flex">
                         <p class="car-type">{{ car_detail.car_type }}</p>
-                        <p class="renter-name">- {{ car_detail.renter_name }}</p>
+                        <p class="renter-name">- {{ car_detail.renter.user.get_full_name }}</p>
                       </div>
                       <h4 class="car-price">Rs {{ car_detail.price }} / day</h4>
                     </div>
