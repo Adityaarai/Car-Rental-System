@@ -98,6 +98,34 @@ class UserProfileView(View):
 
       return render(request, self.template_name, context)
 
+    def post(self, request):
+      if 'updateProfile' in request.POST:
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        license_photo = request.FILES.get('license_photo')
+        contact = request.POST.get('contact')
+
+        user = request.user
+        user_profile = UserProfile.objects.get(user=user)
+
+        user.first_name = first_name
+        user.last_name = last_name
+        user.username = username
+        user.email = email
+        user.save()
+
+        user_profile.address = address
+        if license_photo:
+          user_profile.license_photo = license_photo
+        user_profile.contact = contact
+
+        user_profile.save()
+
+        return redirect('user_profile')
+
 # ------------------------------------------------------------------------------------------------
 
 class DistributorDashboardView(View):

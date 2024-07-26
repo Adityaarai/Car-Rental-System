@@ -69,9 +69,9 @@
           id="updateProfileForm"
           method="POST"
           action="{% url 'user_profile' %}"
+          enctype="multipart/form-data"
         >
           {% csrf_token %}
-          <input type="hidden" name="update_profile" />
           <label for="editFirstName">First Name:</label>
           <input
             type="text"
@@ -121,12 +121,10 @@
           {% endif %}
           <input
             type="file"
-            id="editLicenseNumber"
-            name="license_number"
+            id="editLicensePhoto"
+            name="license_photo"
           />
           <br />
-
-
           <label for="editContact">Contact Number:</label>
           <input
             type="text"
