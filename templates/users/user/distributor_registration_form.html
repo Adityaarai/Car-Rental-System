@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VROOM - Distributor Registration Form</title>
+</head>
+<body>
+  <div class="container">
+    <div class="first-page">
+      <h2>Verify your details</h2>
+
+      <form
+          id="updateProfileForm"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <label for="editFirstName">First Name:</label>
+          <input
+            type="text"
+            id="editFirstName"
+            name="first_name"
+            value="{{ user_profile.user.first_name }}"
+          /><br />
+
+          <label for="editLastName">Last Name:</label>
+          <input
+            type="text"
+            id="editLastName"
+            name="last_name"
+            value="{{ user_profile.user.last_name }}"
+          /><br />
+
+          <label for="editUsername">Username:</label>
+          <input
+            type="text"
+            id="editUsername"
+            name="username"
+            value="{{ user_profile.user.username }}"
+          /><br />
+
+          <label for="editEmail">Email:</label>
+          <input
+            type="email"
+            id="editEmail"
+            name="email"
+            value="{{ user_profile.user.email }}"
+          /><br />
+
+          <label for="editAddress">Address:</label>
+          <input
+            type="text"
+            id="editAddress"
+            name="address"
+            value="{{ user_profile.address }}"
+          />
+          <br />
+
+          <label for="editLicenseNumber">License Photo:</label>
+          {% if user_profile.license_photo %}
+            <img src="{{ user_profile.license_photo.url }}" alt="">
+          {% else %}
+            No file uploaded
+          {% endif %}
+          <input
+            type="file"
+            id="editLicensePhoto"
+            name="license_photo"
+          />
+          <br />
+          <label for="editContact">Contact Number:</label>
+          <input
+            type="text"
+            id="editContact"
+            name="contact"
+            value="{{ user_profile.contact }}"
+          />
+          <br />
+
+          <span id="contactError" style="color: red; display: none"
+            >Contact number must be a 10-digit number.</span
+          ><br />
+
+          <button class="button" type="submit" name="updateProfile" id="verify-btn">Verify Details</button>
+        </form>
+    </div>
+
+    <div class="second-page" style="display: none;">
+      <h2>Add a car</h2>
+      <p>Must have atleast a car to register as a Distributor.</p>
+
+      <form id="addCarForm" method="POST" action="" 
+      enctype="multipart/form-data">
+          {% csrf_token %}
+          <label for="contactNumber">Contact Number:</label><br />
+          <input type="text" id="contactNumber" name="contactNumber" /><br />
+          <label for="car_type">Car Type:</label><br />
+          <input type="text" id="car_type" name="car_type" /><br />
+          <label for="model">Model:</label><br />
+          <input type="text" id="model" name="model" /><br />
+          <label for="price">Price:</label><br />
+          <input type="text" id="price" name="price" /><br />
+          <label for="carImage">Car Image:</label><br />
+          <input
+            type="file"
+            id="carImage"
+            name="carImage"
+            required
+          /><br /><br />
+          <button type="submit" id="car_done">Add Car</button>
+        </form>
+    </div>
+
+  </div>
+</body>
+</html>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(){
+    const verifyBtn = document.getElementById("verify-btn")
+    const firstPage = document.querySelector(".first-page")
+    const secondPage = document.querySelector(".second-page")
+
+    verifyBtn.addEventListener("click", function(event){
+      event.preventDefault();
+      firstPage.style = "display: none;"
+      secondPage.style = "display: block;"
+    })
+  });
+</script>

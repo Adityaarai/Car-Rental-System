@@ -18,8 +18,18 @@
     <!--buttons in profile page-->
     <button class="button" id="profileBtn">Profile</button>
     <button class="button" id="changePasswordBtn">Change Password</button>
-    <button class="button" id="myCarBtn">My Cars</button>
+    {% if user.is_staff %}
+    <a href="{% url 'distributor_dashboard' %}">
+      <button class="button">Distributor View</button>
+    </a>
+    {% else %}
+    <a href="{% url 'register_distributor' %}">
+      <button class="button" id="distributorRequest">Register as a Distributor</button>
+    </a>
+    {% endif %}
     <button class="button" id="myBookingsBtn">My Bookings</button>
+    
+    
 
     <!-- My Bookings dropdown -->
     <div id="myBookingsDropdown" style="display: none">

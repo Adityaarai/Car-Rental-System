@@ -123,6 +123,7 @@ class UserProfileView(View):
         user_profile.contact = contact
 
         user_profile.save()
+        messages.success(request, "Profile updated successfully")
 
         return redirect('user_profile')
 
@@ -387,3 +388,15 @@ class LogoutView(View):
     return redirect('index')
 
 # ------------------------------------------------------------------------------------------------
+
+class DistributorRegisterView(View):
+  template_name = 'users/user/distributor_registration_form.html'
+
+  def get(self, request):
+    user = request.user
+    user_profile = UserProfile.objects.get(user=user)
+
+    context = {
+      'user_profile': user_profile,
+    }
+    return render(request, self.template_name, context)
