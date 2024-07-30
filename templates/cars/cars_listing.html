@@ -16,7 +16,7 @@
   <div class="cards-container">
     <!-- Cards will be dynamically added here -->
     {% for item in object_list %} 
-      {% if not item.availability == 'Unlisted' %}
+      {% if not item.availability == 'Unlisted' and not item.renter.user == request.user %}
         <div class="card">
           <div class="availability-container {% if item.availability == 'Available' %}availability-available{% else %}availability-unavailable{% endif %}">
             <a class="availability">{{ item.availability }}</a>

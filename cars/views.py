@@ -31,7 +31,7 @@ class CarsListView(ListView):
 
 
 class CarDetailView(DetailView):
-  template_name = 'cars/car_details.html'
+  template_name = 'cars/car_booking.html'
   model = CarDetail
   context_object_name = 'detail'
 
@@ -42,7 +42,7 @@ class CarDetailView(DetailView):
 
 class OrderCreateView(LoginRequiredMixin, View):
   login_url = 'login'
-  template_name = 'cars/car_details.html'
+  template_name = 'cars/car_booking.html'
 
   def handle_no_permission(self):
     messages.error(self.request, "You need to be logged in to book a car.")
@@ -53,14 +53,12 @@ class OrderCreateView(LoginRequiredMixin, View):
 
     rentee = UserProfile.objects.get(user__username=request.user.username)
   
-    renter_contact = request.POST.get('renter_contact')
-    car_model = request.POST.get('car_model')
-    renter_name = request.POST.get('renter_name')
+    car_id = request.POST.get('car_id')
     booking_start_date = request.POST.get('bookingStartDate')
     booking_end_date = request.POST.get('bookingEndDate')
 
     try:
-      product = CarDetail.objects.get(car_model=car_model, renter_name=renter_name, renter_contact=renter_contact)
+      product = CarDetail.objects.get(car_id=car_id)
 
       if not booking_start_date or not booking_end_date:
         messages.error(request, "Please enter start and end date to proceed with the booking process.")
