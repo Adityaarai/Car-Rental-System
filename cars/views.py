@@ -123,3 +123,24 @@ class LearnMoreView(View):
 
   def get(self, request):
     return render(request, self.template_name)
+
+# ------------------------------------------------------------------------------------------------
+
+class PaymentView(View):
+  template_name = 'users/user/payment.html'
+
+  def get(self, request, pk):
+    booking = CarOrder.objects.filter(order_id=pk).first()
+
+    car_detail = booking.product
+    car_name = f"{car_detail.car_type} {car_detail.car_model}"
+    car_image = car_detail.image.url
+    context = {
+      'car_name': car_name,
+      'price': booking.total_price,
+      'pickup_date': booking.start_date,
+      'dropoff_date': booking.end_date,
+      'image': car_image
+    }
+
+    return render(request, self.template_name, context)

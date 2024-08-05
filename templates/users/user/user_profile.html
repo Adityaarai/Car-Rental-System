@@ -6,7 +6,7 @@
 
 <div class="main-container">
   <div class="details">
-    <h2>User Profile</h2>
+    <h1>User Profile</h1>
     {% for message in messages %} 
       {% if message.tags == 'error' %}
         <div class="alert alert-danger" role="alert">{{ message }}</div>
@@ -41,7 +41,7 @@
 
     <!-- Profile section -->
     <div id="profileSection" class="section">
-      <h3>Profile Information</h3>
+      <h2>Profile Information</h2>
       <p style="margin-top: 20px; margin-bottom: 10px">
         First Name: <span id="firstName">{{ user_profile.user.first_name }}</span>
       </p>
@@ -74,7 +74,8 @@
       <button class="button" id="editProfileBtn">Edit Profile</button>
 
       <div id="editProfileForm" style="display: none">
-        Edit Profile form
+        <br>
+        <h2>Edit Profile form</h2>
         <form
           id="updateProfileForm"
           method="POST"
@@ -125,7 +126,7 @@
 
           <label for="editLicenseNumber">License Photo:</label>
           {% if user_profile.license_photo %}
-            <img src="{{ user_profile.license_photo.url }}" alt="">
+            <img id="license_photo" src="{{ user_profile.license_photo.url }}" alt="">
           {% else %}
             No file uploaded
           {% endif %}
@@ -150,17 +151,12 @@
 
           <button class="button" type="submit" name="updateProfile">Update Profile</button>
         </form>
-        
-        <!-- <form method="post" action="{% url 'update_user' user_profile.id %}">
-          {% csrf_token %}
-          <button type="submit" id="user-edit-btn">Update</button>
-        </form> -->
       </div>
     </div>
 
     <!-- Change Password section -->
     <div id="changePasswordSection" class="section" style="display: none">
-      <h3>Change Password</h3>
+      <h2>Change Password</h2>
       <form
         id="changePasswordForm"
         method="POST"
@@ -197,7 +193,7 @@
     </div>
 
     <!-- Add Car Popup -->
-    <div class="popup" id="addCarPopup">
+    <!-- <div class="popup" id="addCarPopup">
       <div class="popup-content">
         <span class="close" id="close" onclick="closePopup('addCarPopup')"
           >&times;</span
@@ -228,10 +224,10 @@
           <button type="submit" id="car_done">Add Car</button>
         </form>
       </div>
-    </div>
+    </div> -->
 
     <!-- Remove Car section -->
-    <div id="removeCarSection" class="section" style="display: none">
+    <!-- <div id="removeCarSection" class="section" style="display: none">
       <h3>My Cars</h3>
       {% if cars %}
       <table id="removeCarDetailsTable">
@@ -243,9 +239,9 @@
             <th>Model</th>
             <th>Price</th>
             <th>Car Image</th>
-            <th>Action</th>
+            <th>Action</th> -->
             <!-- Add Action column for Remove button -->
-          </tr>
+          <!-- </tr>
         </thead>
         <tbody>
           {% for car in cars %}
@@ -267,9 +263,9 @@
             <td>
               <button class="removeCarDetailsButton" data-car-id="{{ car.id }}">
                 Remove
-              </button>
+              </button> -->
               <!-- Add Remove button -->
-            </td>
+            <!-- </td>
           </tr>
           {% endfor %}
         </tbody>
@@ -277,10 +273,10 @@
       {% else %}
       <p>You haven't added any cars yet.</p>
       {% endif %}
-    </div>
+    </div> -->
 
     <!-- Popup for Remove Car Confirmation -->
-    <div id="removeCarConfirmation" class="popup" style="display: none">
+    <!-- <div id="removeCarConfirmation" class="popup" style="display: none">
       <div class="popup-content">
         <span class="close" onclick="closePopup('removeCarConfirmation')"
           >&times;</span
@@ -296,10 +292,10 @@
           </button>
         </form>
       </div>
-    </div>
+    </div> -->
 
     <!-- My Car section -->
-    <div id="myCarSection" class="section" style="display: none">
+    <!-- <div id="myCarSection" class="section" style="display: none">
       <h3>My Cars</h3>
       {% if cars %}
       <table id="carDetailsTable">
@@ -339,7 +335,7 @@
       {% endif %}
       <button id="car-add-btn">Add Car</button>
       <button id="removeCarBtn">Remove Car</button>
-    </div>
+    </div> -->
 
     <!--Pending Bookings Section-->
     <div id="pendingSection" class="section" style="display: none">
@@ -381,6 +377,7 @@
             <th>Start Date</th>
             <th>End Date</th>
             <th>Status</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -390,12 +387,15 @@
             <td>{{ booking.start_date }}</td>
             <td>{{ booking.end_date }}</td>
             <td>{{ booking.status }}</td>
+            <td>
+              <form action="{% url 'payment' booking.order_id %}">
+                <button type="submit">Pay</button>
+              </form>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
-      <!-- Payment button to show only if there are approved bookings-->
-      <button class="paymentButton" id="paymentButton">Payment</button>
       {% else %}
       <p>You don't have any approved bookings.</p>
       {% endif %}
@@ -516,10 +516,10 @@
         editProfileForm.style.display = "none";
         changePasswordSection.style.display = "none";
         profileSection.style.display = "block";
-        addCar.style.display = "none";
-        myCarSection.style.display = "none";
+        // addCar.style.display = "none";
+        // myCarSection.style.display = "none";
         myBookingsDropdown.style.display = "none";
-        removeCarSection.style.display = "none";
+        // removeCarSection.style.display = "none";
         pendingSection.style.display = "none";
         approvedSection.style.display = "none";
         paidSection.style.display = "none";
@@ -530,10 +530,10 @@
         editProfileForm.style.display = "block";
         changePasswordSection.style.display = "none";
         profileSection.style.display = "block";
-        addCar.style.display = "none";
-        myCarSection.style.display = "none";
+        // addCar.style.display = "none";
+        // myCarSection.style.display = "none";
         myBookingsDropdown.style.display = "none";
-        removeCarSection.style.display = "none";
+        // removeCarSection.style.display = "none";
         pendingSection.style.display = "none";
         approvedSection.style.display = "none";
         paidSection.style.display = "none";
@@ -566,44 +566,44 @@
         editProfileForm.style.display = "none";
         changePasswordSection.style.display = "block";
         profileSection.style.display = "none";
-        addCar.style.display = "none";
-        myCarSection.style.display = "none";
+        // addCar.style.display = "none";
+        // myCarSection.style.display = "none";
         myBookingsDropdown.style.display = "none";
-        removeCarSection.style.display = "none";
+        // removeCarSection.style.display = "none";
         pendingSection.style.display = "none";
         approvedSection.style.display = "none";
         paidSection.style.display = "none";
         completedSection.style.display = "none";
       });
 
-      addBtn.addEventListener("click", function () {
-        editProfileForm.style.display = "none";
-        changePasswordSection.style.display = "none";
-        profileSection.style.display = "block";
-        addCar.style.display = "block";
-        myCarSection.style.display = "none";
-        myBookingsDropdown.style.display = "none";
-        removeCarSection.style.display = "none";
-        pendingSection.style.display = "none";
-        approvedSection.style.display = "none";
-        paidSection.style.display = "none";
-        completedSection.style.display = "none";
-      });
+      // addBtn.addEventListener("click", function () {
+      //   editProfileForm.style.display = "none";
+      //   changePasswordSection.style.display = "none";
+      //   profileSection.style.display = "block";
+      //   addCar.style.display = "block";
+      //   myCarSection.style.display = "none";
+      //   myBookingsDropdown.style.display = "none";
+      //   removeCarSection.style.display = "none";
+      //   pendingSection.style.display = "none";
+      //   approvedSection.style.display = "none";
+      //   paidSection.style.display = "none";
+      //   completedSection.style.display = "none";
+      // });
 
       // Event listener for Remove Car button
-      removeCarBtn.addEventListener("click", function () {
-        editProfileForm.style.display = "none";
-        changePasswordSection.style.display = "none";
-        profileSection.style.display = "block";
-        addCar.style.display = "none";
-        myCarSection.style.display = "none";
-        myBookingsDropdown.style.display = "none";
-        removeCarSection.style.display = "block";
-        pendingSection.style.display = "none";
-        approvedSection.style.display = "none";
-        paidSection.style.display = "none";
-        completedSection.style.display = "none";
-      });
+      // removeCarBtn.addEventListener("click", function () {
+      //   editProfileForm.style.display = "none";
+      //   changePasswordSection.style.display = "none";
+      //   profileSection.style.display = "block";
+      //   addCar.style.display = "none";
+      //   myCarSection.style.display = "none";
+      //   myBookingsDropdown.style.display = "none";
+      //   removeCarSection.style.display = "block";
+      //   pendingSection.style.display = "none";
+      //   approvedSection.style.display = "none";
+      //   paidSection.style.display = "none";
+      //   completedSection.style.display = "none";
+      // });
 
       // Event listener for Remove button in Remove Car Details table
       document.querySelectorAll(".removeCarDetailsButton").forEach((button) => {
@@ -617,20 +617,20 @@
         });
       });
 
-      myCarBtn.addEventListener("click", function () {
-        // Handle My Car button click
-        editProfileForm.style.display = "none";
-        changePasswordSection.style.display = "none";
-        profileSection.style.display = "none";
-        addCar.style.display = "none";
-        myCarSection.style.display = "block";
-        myBookingsDropdown.style.display = "none";
-        removeCarSection.style.display = "none";
-        pendingSection.style.display = "none";
-        approvedSection.style.display = "none";
-        paidSection.style.display = "none";
-        completedSection.style.display = "none";
-      });
+      // myCarBtn.addEventListener("click", function () {
+      //   // Handle My Car button click
+      //   editProfileForm.style.display = "none";
+      //   changePasswordSection.style.display = "none";
+      //   profileSection.style.display = "none";
+      //   addCar.style.display = "none";
+      //   myCarSection.style.display = "block";
+      //   myBookingsDropdown.style.display = "none";
+      //   removeCarSection.style.display = "none";
+      //   pendingSection.style.display = "none";
+      //   approvedSection.style.display = "none";
+      //   paidSection.style.display = "none";
+      //   completedSection.style.display = "none";
+      // });
 
       // Event listener for My Bookings button
       myBookingsBtn.addEventListener("click", function () {
@@ -645,9 +645,9 @@
         editProfileForm.style.display = "none";
         changePasswordSection.style.display = "none";
         profileSection.style.display = "none";
-        addCar.style.display = "none";
-        myCarSection.style.display = "none";
-        removeCarSection.style.display = "none";
+        // addCar.style.display = "none";
+        // myCarSection.style.display = "none";
+        // removeCarSection.style.display = "none";
 
         // Event listener for dropdown buttons
         pendingBtn.addEventListener("click", function () {
@@ -1103,6 +1103,11 @@
     max-height: 90%;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  #license_photo{
+    height: 400px;
+    width: 600px;
   }
   </style>
 

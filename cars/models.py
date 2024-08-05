@@ -31,7 +31,7 @@ def car_blue_book_path(instance, filename):
 # Create your models here.
 class CarDetail(models.Model):
     car_id = models.AutoField(primary_key=True)
-    renter = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING)
+    renter = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     car_type = models.CharField(max_length=100, choices=CAR_TYPE, null=True)
     car_model = models.CharField(max_length=100, null=True)
     price = models.DecimalField(decimal_places=2, max_digits=10, null=True)
@@ -46,8 +46,8 @@ class CarDetail(models.Model):
 # car orders table model
 class CarOrder(models.Model):
     order_id = models.AutoField(primary_key=True)
-    product = models.ForeignKey(CarDetail, on_delete=models.DO_NOTHING)
-    rentee = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING)
+    product = models.ForeignKey(CarDetail, on_delete=models.CASCADE)
+    rentee = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     start_date = models.DateTimeField(null=True)
     end_date = models.DateTimeField(null=True)

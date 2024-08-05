@@ -183,7 +183,7 @@ class ApproveBookingsView(View):
       subject = "Car Booking Approved Successfully!!"
       message = f"""Hello {car_order.rentee.user.username}:,
 
-We are excited to inform you that your order has been successfully approved!
+We are excited to inform you that your order for {car_order.product.car_model} has been successfully approved!
 Please proceed with the payment to fully complete this booking request. After payment the car will be delivered according to your needs.
 
 Thank you for choosing VROOM-Car-Rental-Service. We are delighted to have you as a valued customer and look forward to providing you with an exceptional car rental experience.
@@ -223,7 +223,7 @@ class RejectBookingsView(View):
       subject = "Car Booking Rejected Unfortunately!!"
       message = f"""Hello {car_order.rentee.user.username}:,
 
-We regret to inform you that your order has been rejected. Please check your license and contact details before trying again.
+We regret to inform you that your order for {car_order.product.car_model} has been rejected. Please check your license and contact details before trying again.
 We apologize for any inconvenience this may cause.
 
 Thank you for choosing VROOM-Car-Rental-Service. We value your patronage and look forward to serving you in the future.
