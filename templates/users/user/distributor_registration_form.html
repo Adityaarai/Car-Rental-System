@@ -7,14 +7,22 @@
 </head>
 <body>
   <div class="container">
+
+    <div class="progress-bar">
+      <div class="progress-bubble one active">
+        1
+      </div>
+      <div class="progress-bubble two">
+        2
+      </div>
+      <div class="progress-bubble three">
+        3
+      </div>
+    </div>
     <div class="first-page">
       <h2>Verify your details</h2>
 
-      <form
-          id="updateProfileForm"
-          method="POST"
-          enctype="multipart/form-data"
-        >
+      <form id="updateProfileForm" method="POST" enctype="multipart/form-data">
           {% csrf_token %}
           <label for="editFirstName">First Name:</label>
           <input
@@ -82,6 +90,7 @@
             >Contact number must be a 10-digit number.</span
           ><br />
 
+          <a class="button" href="{% url 'user_profile' %}">Back</a>
           <button class="button" type="submit" name="updateProfile" id="verify-btn">Verify Details</button>
         </form>
     </div>
@@ -108,7 +117,8 @@
             name="carImage"
             required
           /><br /><br />
-          <button type="submit" id="car_done">Add Car</button>
+          <a class="button" id="previous">Previous</a>
+          <button  class="button" type="submit" id="car_done">Add Car</button>
         </form>
     </div>
 
@@ -121,11 +131,146 @@
     const verifyBtn = document.getElementById("verify-btn")
     const firstPage = document.querySelector(".first-page")
     const secondPage = document.querySelector(".second-page")
+    const previousBtn = document.querySelector("#previous")
+    const bubbleOne = document.querySelector(".one")
+    const bubbleTwo = document.querySelector(".two")
+    const bubbleThree = document.querySelector(".three")
 
     verifyBtn.addEventListener("click", function(event){
       event.preventDefault();
       firstPage.style = "display: none;"
       secondPage.style = "display: block;"
+      bubbleOne.classList.remove("active");
+      bubbleThree.classList.remove("active");
+      bubbleTwo.classList.add("active");
+    })
+
+    previousBtn.addEventListener("click", function(event){
+      event.preventDefault();
+      firstPage.style = "display: block;"
+      secondPage.style = "display: none;"
+      bubbleOne.classList.add("active");
+      bubbleThree.classList.remove("active");
+      bubbleTwo.classList.remove("active");
     })
   });
 </script>
+
+<style>
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+  }
+
+  :root {
+      --indigo: #16425b;
+      --lapis: #2f6690;
+      --cerulean: #3a7ca5;
+      --skyblue: #81c3d7;
+      --platinum: #d9dcd6;
+      --darkgray: #b4b4b3;
+      --red: #f44336;
+      --green: #4caf50;
+      --darkgreen: darkgreen;
+      --crimson: crimson;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: "Montserrat", sans-serif;
+    }
+
+    .container {
+      width: 90vw;
+      margin: 0 5%;
+      margin-top: 9.8vh;
+      min-height: 65.6vh;
+    }
+
+    .details {
+      padding: 40px;
+    }
+
+    h2,
+    h3 {
+      color: var(--indigo);
+    }
+
+  .button {
+      padding: 8px 16px;
+      border: none;
+      background-color: var(--lapis);
+      color: var(--platinum);
+      cursor: pointer;
+      border-radius: 5px;
+      margin-right: 10px;
+      font-size: medium;
+      margin-top: 20px;
+    }
+
+    form {
+      margin-top: 10px;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    form input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+
+    form button {
+      padding: 8px 20px;
+      background-color: var(--indigo);
+      color: var(--white);
+      border: none;
+      cursor: pointer;
+    }
+
+    form button:hover {
+      background-color: var(--lapis);
+    }
+
+    /* Customizing alert colors */
+    .alert-danger {
+      color: var(--red);
+      font-weight: bold;
+    }
+
+    .alert-success {
+      color: var(--green);
+      font-weight: bold;
+    }
+
+    /* Adjusting message display */
+    .message {
+      margin-top: 20px;
+      max-width: 300px;
+      word-wrap: break-word; /* Allow long messages to wrap */
+    }
+
+    .progress-bar {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 100px 50px 100px;
+    }
+
+    .progress-bubble {
+      background-color: var(--lapis);
+      color: var(--platinum);
+      padding: 20px 30px;
+      border-radius: 100px;
+      font-size: 1.5rem;
+    }
+
+    .active {
+      background-color: var(--indigo);
+    }
+</style>
