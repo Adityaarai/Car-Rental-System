@@ -1,6 +1,7 @@
 from django import forms
 from .models import UserProfile
 from django.contrib.auth.models import User
+from cars.models import CarDetail, CarOrder
 
 class LoginForm(forms.Form):
   username_or_email = forms.CharField(max_length=100, label="Username", required=True,
@@ -83,49 +84,6 @@ class AddUserForm(forms.ModelForm):
     'class': 'form-control',
     'placeholder': 'Email'
   }))
-
-
-
-class UserProfileForm(forms.ModelForm):
-    username = forms.CharField(max_length=150, required=True)
-    email = forms.CharField(max_length=150, required=True)
-    first_name = forms.CharField(max_length=30, required=True)
-    last_name = forms.CharField(max_length=30, required=True)
-
-    class Meta:
-        model = UserProfile
-        fields = ['username', 'email', 'first_name', 'last_name', 'address', 'contact', 'license_photo']
-
-    def __init__(self, *args, **kwargs):
-        user_detail = kwargs.pop('user_detail', None)
-        super(UserProfileForm, self).__init__(*args, **kwargs)
-
-        if user_detail:
-            self.fields['username'].initial = user_detail.user.username
-            self.fields['email'].initial = user_detail.user.email
-            self.fields['first_name'].initial = user_detail.user.first_name
-            self.fields['last_name'].initial = user_detail.user.last_name
-            self.fields['address'].initial = user_detail.address
-            self.fields['contact'].initial = user_detail.contact
-
-            print(self.fields['username'].initial)
-            print(self.fields['email'].initial)
-            print(self.fields['first_name'].initial)
-            print(self.fields['last_name'].initial)
-            print(self.fields['address'].initial)
-            print(self.fields['contact'].initial)
-
-    def save(self, commit=True):
-        user_profile = super(UserProfileForm, self).save(commit=False)
-        user = user_profile.user
-        user.username = self.cleaned_data['username']
-        user.email = self.cleaned_data['email']
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        if commit:
-            user.save()
-            user_profile.save()
-        return user_profile
     
 class UserProfileCreateForm(forms.ModelForm):
     class Meta:
@@ -145,3 +103,15 @@ class UserProfileCreateForm(forms.ModelForm):
         profile.address = self.cleaned_data['address']
         profile.save()
       return user
+
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['address', 'license_photo', 'contact']
+
+class CarDetailForm(forms.ModelForm):
+    class Meta:
+        model = CarDetail
+        fields = ['car_type', 'car_model', 'image', 'blue_book', 'price']
+

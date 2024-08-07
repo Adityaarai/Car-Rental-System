@@ -7,153 +7,143 @@
 </head>
 <body>
   <div class="container">
-
     <div class="progress-bar">
-      <div class="progress-bubble one active">
-        1
-      </div>
-      <div class="progress-bubble two">
-        2
-      </div>
-      <div class="progress-bubble three">
-        3
-      </div>
+      <div class="progress-bubble one active">1</div>
+      <div class="progress-bubble two">2</div>
+      <div class="progress-bubble three">3</div>
     </div>
-    <div class="first-page">
-      <h2>Verify your details</h2>
+    <form id="mainForm" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
 
-      <form id="updateProfileForm" method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-          <label for="editFirstName">First Name:</label>
-          <input
-            type="text"
-            id="editFirstName"
-            name="first_name"
-            value="{{ user_profile.user.first_name }}"
-          /><br />
+      <div class="first-page">
+        <h2>Verify your details</h2>
+        <label for="editFirstName">First Name:</label>
+        <input type="text" id="editFirstName" name="first_name" value="{{ user_profile.user.first_name }}" /><br />
 
-          <label for="editLastName">Last Name:</label>
-          <input
-            type="text"
-            id="editLastName"
-            name="last_name"
-            value="{{ user_profile.user.last_name }}"
-          /><br />
+        <label for="editLastName">Last Name:</label>
+        <input type="text" id="editLastName" name="last_name" value="{{ user_profile.user.last_name }}" /><br />
 
-          <label for="editUsername">Username:</label>
-          <input
-            type="text"
-            id="editUsername"
-            name="username"
-            value="{{ user_profile.user.username }}"
-          /><br />
+        <label for="editUsername">Username:</label>
+        <input type="text" id="editUsername" name="username" value="{{ user_profile.user.username }}" /><br />
 
-          <label for="editEmail">Email:</label>
-          <input
-            type="email"
-            id="editEmail"
-            name="email"
-            value="{{ user_profile.user.email }}"
-          /><br />
+        <label for="editEmail">Email:</label>
+        <input type="email" id="editEmail" name="email" value="{{ user_profile.user.email }}" /><br />
 
-          <label for="editAddress">Address:</label>
-          <input
-            type="text"
-            id="editAddress"
-            name="address"
-            value="{{ user_profile.address }}"
-          />
-          <br />
+        <label for="editAddress">Address:</label>
+        <input type="text" id="editAddress" name="address" value="{{ user_profile.address }}" /><br />
 
-          <label for="editLicenseNumber">License Photo:</label>
-          {% if user_profile.license_photo %}
-            <img src="{{ user_profile.license_photo.url }}" alt="">
-          {% else %}
-            No file uploaded
-          {% endif %}
-          <input
-            type="file"
-            id="editLicensePhoto"
-            name="license_photo"
-          />
-          <br />
-          <label for="editContact">Contact Number:</label>
-          <input
-            type="text"
-            id="editContact"
-            name="contact"
-            value="{{ user_profile.contact }}"
-          />
-          <br />
+        <label for="editLicensePhoto">License Photo:</label>
+        {% if user_profile.license_photo %}
+          <img src="{{ user_profile.license_photo.url }}" alt="User license photo">
+        {% else %}
+          No file uploaded
+        {% endif %}
+        <input type="file" id="editLicensePhoto" name="license_photo" /><br />
 
-          <span id="contactError" style="color: red; display: none"
-            >Contact number must be a 10-digit number.</span
-          ><br />
+        <label for="editContact">Contact Number:</label>
+        <input type="text" id="editContact" name="contact" value="{{ user_profile.contact }}" /><br />
 
-          <a class="button" href="{% url 'user_profile' %}">Back</a>
-          <button class="button" type="submit" name="updateProfile" id="verify-btn">Verify Details</button>
-        </form>
-    </div>
+        <a class="button" href="{% url 'user_profile' %}">Back</a>
+        <button class="button" type="button" id="verify-btn">Verify Details</button>
+      </div>
 
-    <div class="second-page" style="display: none;">
-      <h2>Add a car</h2>
-      <p>Must have atleast a car to register as a Distributor.</p>
+      <div class="second-page" style="display: none;">
+        <h2>Add a car</h2>
+        <p>Must have at least one car to register as a Distributor.</p>
+        <label for="car_type">Car Type:</label><br />
+        <input type="text" id="car_type" name="car_type" /><br />
+        <label for="model">Model:</label><br />
+        <input type="text" id="model" name="car_model" /><br />
+        <label for="price">Price:</label><br />
+        <input type="text" id="price" name="price" /><br />
+        <label for="carImage">Car Image:</label><br />
+        <input type="file" id="carImage" name="car_image" /><br /><br />
+        <label for="bluebookImage">Blue Book:</label><br />
+        <input type="file" id="bluebookImage" name="bluebook_image" /><br /><br />
+        <a class="button" id="previous">Previous</a>
+        <button class="button" type="button" id="addCar">Add Car</button>
+      </div>
 
-      <form id="addCarForm" method="POST" action="" 
-      enctype="multipart/form-data">
-          {% csrf_token %}
-          <label for="contactNumber">Contact Number:</label><br />
-          <input type="text" id="contactNumber" name="contactNumber" /><br />
-          <label for="car_type">Car Type:</label><br />
-          <input type="text" id="car_type" name="car_type" /><br />
-          <label for="model">Model:</label><br />
-          <input type="text" id="model" name="model" /><br />
-          <label for="price">Price:</label><br />
-          <input type="text" id="price" name="price" /><br />
-          <label for="carImage">Car Image:</label><br />
-          <input
-            type="file"
-            id="carImage"
-            name="carImage"
-            required
-          /><br /><br />
-          <a class="button" id="previous">Previous</a>
-          <button  class="button" type="submit" id="car_done">Add Car</button>
-        </form>
-    </div>
+      <div class="third-page" style="display: none;">
+        <h1>Terms and Conditions</h1>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Rem, autem odit? Reprehenderit aperiam sunt aliquam repudiandae quisquam autem corrupti impedit, eos beatae, porro unde nesciunt obcaecati facere? Sint, qui reprehenderit!</p>
+        <a class="button" id="previous2">Previous</a>
+        <button type="submit" name="sendRequest" id="submitForm">Send Request</button>
+      </div>
 
+    </form>
   </div>
 </body>
 </html>
 
+
 <script>
-  document.addEventListener("DOMContentLoaded", function(){
-    const verifyBtn = document.getElementById("verify-btn")
-    const firstPage = document.querySelector(".first-page")
-    const secondPage = document.querySelector(".second-page")
-    const previousBtn = document.querySelector("#previous")
-    const bubbleOne = document.querySelector(".one")
-    const bubbleTwo = document.querySelector(".two")
-    const bubbleThree = document.querySelector(".three")
+ document.addEventListener("DOMContentLoaded", function(){
+    const verifyBtn = document.getElementById("verify-btn");
+    const addCarBtn = document.getElementById("addCar");
+    const firstPage = document.querySelector(".first-page");
+    const secondPage = document.querySelector(".second-page");
+    const thirdPage = document.querySelector(".third-page");
+    const previousBtn = document.querySelector("#previous");
+    const previousBtn2 = document.querySelector("#previous2");
+    const bubbleOne = document.querySelector(".one");
+    const bubbleTwo = document.querySelector(".two");
+    const bubbleThree = document.querySelector(".three");
+    const submitFormBtn = document.getElementById("submitForm");
 
     verifyBtn.addEventListener("click", function(event){
-      event.preventDefault();
-      firstPage.style = "display: none;"
-      secondPage.style = "display: block;"
-      bubbleOne.classList.remove("active");
-      bubbleThree.classList.remove("active");
-      bubbleTwo.classList.add("active");
-    })
+        event.preventDefault();
+        firstPage.style.display = "none";
+        secondPage.style.display = "block";
+        thirdPage.style.display = "none";
+
+        bubbleOne.classList.remove("active");
+        bubbleThree.classList.remove("active");
+        bubbleTwo.classList.add("active");
+    });
+
+    addCarBtn.addEventListener("click", function(event){
+        event.preventDefault();
+        firstPage.style.display = "none";
+        secondPage.style.display = "none";
+        thirdPage.style.display = "block";
+
+        bubbleOne.classList.remove("active");
+        bubbleTwo.classList.remove("active");
+        bubbleThree.classList.add("active");
+
+    });
 
     previousBtn.addEventListener("click", function(event){
+        event.preventDefault();
+        firstPage.style.display = "block";
+        secondPage.style.display = "none";
+        thirdPage.style.display = "none";
+
+        bubbleOne.classList.add("active");
+        bubbleTwo.classList.remove("active");
+        bubbleThree.classList.remove("active");
+    });
+
+    previousBtn2.addEventListener("click", function(event){
+        event.preventDefault();
+        firstPage.style.display = "none";
+        secondPage.style.display = "block";
+        thirdPage.style.display = "none";
+
+        bubbleOne.classList.remove("active");
+        bubbleTwo.classList.add("active");
+        bubbleThree.classList.remove("active");
+    });
+
+    submitFormBtn.addEventListener("click", function(event){
       event.preventDefault();
-      firstPage.style = "display: block;"
-      secondPage.style = "display: none;"
-      bubbleOne.classList.add("active");
-      bubbleThree.classList.remove("active");
-      bubbleTwo.classList.remove("active");
-    })
-  });
+
+      // Change to submit the entire form
+      document.getElementById("mainForm").submit();
+    });
+});
+
 </script>
 
 <style>
