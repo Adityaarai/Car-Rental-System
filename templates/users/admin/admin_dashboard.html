@@ -210,6 +210,55 @@
 
         <div id="request-content">
           <h2>Distributor Requests</h2>
+
+          {% if distributor_requests %}
+            <table>
+              <tr>
+                <th>Requester</th>
+                <th>License Photo</th>
+                <th>Car Detail</th>
+                <th>Car Blue Book</th>
+                <th></th>
+                <th></th>
+              </tr>
+              {% for distributor_request in distributor_requests %}
+                {% if not distributor_request.distributor_status %}
+                  <tr>
+                    <td>{{ distributor_request.requester }}</td>
+                    <td>
+                      {% if distributor_request.requester.license_photo %}
+                        <a href="#" onclick="showImage('{{ distributor_request.requester.license_photo.url }}')">View License</a>
+                      {% else %}
+                        Not Uploaded
+                      {% endif %}
+                    </td>
+                    <td>{{ distributor_request.car_detail }}</td>
+                    <td>
+                      {% if distributor_request.car_detail.blue_book %}
+                        <a href="#" onclick="showImage('{{ distributor_request.car_detail.blue_book.url }}')">View Blue Book</a>
+                      {% else %}
+                        Not Uploaded
+                      {% endif %}
+                    </td>
+                    <td>
+                      <form method="post" action="{% url 'approve_requests' distributor_request.id %}">
+                        {% csrf_token %}
+                        <button type="submit" id="user-edit-btn">Accept</button>
+                      </form>
+                    </td>
+                    <td>
+                      <form method="post" action="{% url 'reject_requests' distributor_request.id %}">
+                        {% csrf_token %}
+                        <button type="submit" id="user-delete-btn">Reject</button>
+                      </form>
+                    </td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
+            </table>
+          {% else %}
+            No requests at the moment
+          {% endif %}
         </div>
 
       </div>

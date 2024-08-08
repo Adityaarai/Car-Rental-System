@@ -65,12 +65,14 @@ class AdminDashboardView(View):
         total_user_count = UserProfile.objects.filter(user__is_staff=False).count()
         recent_users = UserProfile.objects.filter(user__is_staff=False).order_by('-user__date_joined')[:5]
         user_details = UserProfile.objects.all()
+        distributor_requests = DistributorRequest.objects.all()
 
         context = {
             'total_distributor_count': total_distributor_count,
             'total_user_count': total_user_count,
             'recent_users': recent_users,
             'user_details': user_details,
+            'distributor_requests': distributor_requests,
         }
         return render(request, self.template_name, context)
 
@@ -451,4 +453,98 @@ class DistributorRegisterView(View):
         messages.success(request, "Registration successful.")
         return redirect('user_profile')  
 
+# ------------------------------------------------------------------------------------------------
 
+class RejectRequestsView(View):
+    template_name = 'users/admin/admin_dashboard.html'
+    success_url = reverse_lazy('admin_dashboard')
+
+    def post(self, request, pk):
+        request_detail = get_object_or_404(DistributorRequest, pk=pk)
+
+        if request_detail:
+
+            subject = "Distributor Request Rejected Unfortunately!!"
+            message = f"""Hello {request_detail.requester.user.username},
+
+We regret to inform you that your request to apply as a distributor has been rejected. Please check your license and contact details before trying again.
+We apologize for any inconvenience this may cause. Please check your documents and try again.
+
+Thank you for choosing VROOM-Car-Rental-Service. We value your patronage and look forward to serving you in the future.
+
+If you have any questions or need further assistance, please don't hesitate to reach out to our support team.
+
+Best regards,
+The VROOM-Car-Rental-Service Team
+"""
+
+            from_email = settings.EMAIL_HOST_USER
+            to_list = [request_detail.requester.user.email]
+            try:
+                send_mail(subject, message, from_email, to_list, fail_silently=False)
+                messages.success(request, "Request rejected and email sent successfully!")
+            except Exception as e:
+                messages.error(request, f"Request rejected, but failed to send email. Error: {str(e)}")
+
+            request_detail.delete()
+            return redirect(self.success_url)
+        else:
+            messages.error(request, "Distributor request not found!")
+            return redirect(self.success_url)
+
+
+
+class ApproveRequestsView(View):
+    template_name = 'users/admin/admin_dashboard.html'
+    success_url = reverse_lazy('admin_dashboard')
+
+    def post(self, request, pk):
+        request_detail = get_object_or_404(DistributorRequest, pk=pk)
+
+        if request_detail:
+            user = request_detail.requester.user
+              
+            user.is_staff = True
+
+            # Get permissions for CarDetail and CarOrder models
+            car_detail_content_type = ContentType.objects.get_for_model(CarDetail)
+            car_detail_permissions = Permission.objects.filter(content_type=car_detail_content_type)
+
+            car_order_content_type = ContentType.objects.get_for_model(CarOrder)
+            car_order_permissions = Permission.objects.filter(content_type=car_order_content_type)
+
+            # Add permissions to the user
+            all_permissions = car_detail_permissions | car_order_permissions
+            user.user_permissions.add(*all_permissions)
+
+            user.save()
+
+            subject = "Distributor Request Approved!"
+            message = f"""Hello {request_detail.requester.user.username},
+
+We are pleased to inform you that your request to become a distributor has been approved! Welcome to the VROOM-Car-Rental-Service team.
+
+You can now start adding your cars to our platform and begin renting them out.
+
+Thank you for choosing VROOM-Car-Rental-Service. We value your partnership and look forward to a successful collaboration.
+
+If you have any questions or need further assistance, please don't hesitate to reach out to our support team.
+
+Best regards,
+The VROOM-Car-Rental-Service Team
+"""
+
+            from_email = settings.EMAIL_HOST_USER
+            to_list = [request_detail.requester.user.email]
+            try:
+                send_mail(subject, message, from_email, to_list, fail_silently=False)
+                messages.success(request, "Request approved and email sent successfully!")
+            except Exception as e:
+                messages.error(request, f"Request approved, but failed to send email. Error: {str(e)}")
+
+            request_detail.distributor_status = True
+            request_detail.save()
+            return redirect(self.success_url)
+        else:
+            messages.error(request, "Distributor request not found!")
+            return redirect(self.success_url)

@@ -16,5 +16,7 @@ urlpatterns = [
   path('distributor_dashboard/cars/update/<int:pk>/', UpdateCarDetailsView.as_view(), name='update_cars'),
   path('user_profile/', UserProfileView.as_view(), name='user_profile'),
   path('user_profile/update/', UserUpdateView.as_view(), name='update_user_profile'),
-  path('user_profile/register_as_distributor/', DistributorRegisterView.as_view(), name='register_distributor')
+  path('user_profile/register_as_distributor/', DistributorRegisterView.as_view(), name='register_distributor'),
+  path('admin_dashboard/request/approve/<int:pk>/', ApproveRequestsView.as_view(), name='approve_requests'),
+  path('admin_dashboard/request/reject/<int:pk>/', RejectRequestsView.as_view(), name='reject_requests'),
 ]
