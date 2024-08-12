@@ -14,64 +14,52 @@
     </div>
     <form id="mainForm" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
-
+      
       <div class="first-page">
         <h2>Verify your details</h2>
-        <label for="editFirstName">First Name:</label>
-        <input type="text" id="editFirstName" name="first_name" value="{{ user_profile.user.first_name }}" /><br />
-
-        <label for="editLastName">Last Name:</label>
-        <input type="text" id="editLastName" name="last_name" value="{{ user_profile.user.last_name }}" /><br />
-
-        <label for="editUsername">Username:</label>
-        <input type="text" id="editUsername" name="username" value="{{ user_profile.user.username }}" /><br />
-
-        <label for="editEmail">Email:</label>
-        <input type="email" id="editEmail" name="email" value="{{ user_profile.user.email }}" /><br />
-
-        <label for="editAddress">Address:</label>
-        <input type="text" id="editAddress" name="address" value="{{ user_profile.address }}" /><br />
-
-        <label for="editLicensePhoto">License Photo:</label>
+        {{ form.first_name.label_tag }} {{ form.first_name }}<br />
+        {{ form.last_name.label_tag }} {{ form.last_name }}<br />
+        {{ form.username.label_tag }} {{ form.username }}<br />
+        {{ form.email.label_tag }} {{ form.email }}<br />
+        {{ form.address.label_tag }} {{ form.address }}<br />
+    
         {% if user_profile.license_photo %}
-          <img src="{{ user_profile.license_photo.url }}" alt="User license photo">
-        {% else %}
-          No file uploaded
+            <label>Current License Photo:</label><br />
+            <img src="{{ user_profile.license_photo.url }}" alt="License Photo" width="200px"><br />
         {% endif %}
-        <input type="file" id="editLicensePhoto" name="license_photo" /><br />
-
-        <label for="editContact">Contact Number:</label>
-        <input type="text" id="editContact" name="contact" value="{{ user_profile.contact }}" /><br />
-
+    
+        {{ form.license_photo.label_tag }} {{ form.license_photo }}<br />
+        {{ form.contact.label_tag }} {{ form.contact }}<br />
+    
         <a class="button" href="{% url 'user_profile' %}">Back</a>
         <button class="button" type="button" id="verify-btn">Verify Details</button>
-      </div>
-
-      <div class="second-page" style="display: none;">
-        <h2>Add a car</h2>
-        <p>Must have at least one car to register as a Distributor.</p>
-        <label for="car_type">Car Type:</label><br />
-        <input type="text" id="car_type" name="car_type" /><br />
-        <label for="model">Model:</label><br />
-        <input type="text" id="model" name="car_model" /><br />
-        <label for="price">Price:</label><br />
-        <input type="text" id="price" name="price" /><br />
-        <label for="carImage">Car Image:</label><br />
-        <input type="file" id="carImage" name="car_image" /><br /><br />
-        <label for="bluebookImage">Blue Book:</label><br />
-        <input type="file" id="bluebookImage" name="bluebook_image" /><br /><br />
-        <a class="button" id="previous">Previous</a>
-        <button class="button" type="button" id="addCar">Add Car</button>
-      </div>
-
+    </div>
+  
+    <div class="second-page" style="display: none;">
+      <h2>Add a car</h2>
+      {{ form.car_type.label_tag }} {{ form.car_type }}<br />
+      {{ form.car_model.label_tag }} {{ form.car_model }}<br />
+      {{ form.price.label_tag }} {{ form.price }}<br />
+      {{ form.car_image.label_tag }} {{ form.car_image }}<br /><br />
+  
+      {% if car_detail.blue_book %}
+          <label>Current Blue Book Image:</label><br />
+          <img src="{{ car_detail.blue_book.url }}" alt="Blue Book Image" width="200px"><br /><br />
+      {% endif %}
+  
+      {{ form.bluebook_image.label_tag }} {{ form.bluebook_image }}<br /><br />
+      <a class="button" id="previous">Previous</a>
+      <button class="button" type="button" id="addCar">Add Car</button>
+  </div>
+  
+  
       <div class="third-page" style="display: none;">
-        <h1>Terms and Conditions</h1>
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Rem, autem odit? Reprehenderit aperiam sunt aliquam repudiandae quisquam autem corrupti impedit, eos beatae, porro unde nesciunt obcaecati facere? Sint, qui reprehenderit!</p>
-        <a class="button" id="previous2">Previous</a>
-        <button type="submit" name="sendRequest" id="submitForm">Send Request</button>
+          <h1>Terms and Conditions</h1>
+          <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Rem, autem odit? Reprehenderit aperiam sunt aliquam repudiandae quisquam autem corrupti impedit, eos beatae, porro unde nesciunt obcaecati facere? Sint, qui reprehenderit!</p>
+          <a class="button" id="previous2">Previous</a>
+          <button type="submit" name="sendRequest" id="submitForm">Send Request</button>
       </div>
-
-    </form>
+  </form>
   </div>
 </body>
 </html>

@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from .models import UserProfile
 from django.views.generic import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from .forms import UserProfileForm, UserProfileCreateForm
+from .forms import UserProfileForm, UserProfileCreateForm, DistributorRegistrationForm
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from cars.models import CarDetail, CarOrder
@@ -397,61 +397,74 @@ class DistributorRegisterView(View):
   template_name = 'users/user/distributor_registration_form.html'
 
   def get(self, request):
-    user = request.user
-    user_profile = UserProfile.objects.get(user=user)
+        user = request.user
+        try:
+            user_profile = UserProfile.objects.get(user=user)
+        except UserProfile.DoesNotExist:
+            messages.error(request, "User profile does not exist.")
+            return redirect('user_profile')
 
-    context = {
-      'user_profile': user_profile,
-    }
-    return render(request, self.template_name, context)
+        initial_data = {
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'username': user.username,
+            'email': user.email,
+            'address': user_profile.address,
+            'contact': user_profile.contact,
+        }
+
+        form = DistributorRegistrationForm(initial=initial_data)
+        context = {
+            'user_profile': user_profile,
+            'form': form,
+        }
+        return render(request, self.template_name, context)
 
   def post(self, request):
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        address = request.POST.get('address')
-        license_photo = request.FILES.get('license_photo')
-        contact = request.POST.get('contact')
-
         user = request.user
-        user_profile = UserProfile.objects.get(user=user)
+        try:
+            user_profile = UserProfile.objects.get(user=user)
+        except UserProfile.DoesNotExist:
+            messages.error(request, "User profile does not exist.")
+            return redirect('user_profile')
 
-        user.first_name = first_name
-        user.last_name = last_name
-        user.username = username
-        user.email = email
-        user.save()
+        form = DistributorRegistrationForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Update user profile
+            user.first_name = form.cleaned_data.get('first_name')
+            user.last_name = form.cleaned_data.get('last_name')
+            user.username = form.cleaned_data.get('username')
+            user.email = form.cleaned_data.get('email')
+            user.save()
 
-        user_profile.address = address
-        if license_photo:
-          user_profile.license_photo = license_photo
-        user_profile.contact = contact
+            user_profile.address = form.cleaned_data.get('address')
+            user_profile.contact = form.cleaned_data.get('contact')
+            if form.cleaned_data.get('license_photo'):
+                user_profile.license_photo = form.cleaned_data.get('license_photo')
+            user_profile.save()
 
-        user_profile.save()
+            # Save car details
+            car_detail = form.save(commit=False)
+            car_detail.renter = user_profile
+            car_detail.save()
 
-        car_type = request.POST.get('car_type')
-        car_model = request.POST.get('car_model')
-        image = request.FILES.get('car_image')
-        blue_book = request.FILES.get('bluebook_image')
-        price = request.POST.get('price')
+            # Create distributor request
+            DistributorRequest.objects.create(
+                requester=user_profile,
+                car_detail=car_detail
+            )
 
-        car_detail = CarDetail.objects.create(
-            renter=user_profile,
-            car_type=car_type,
-            car_model=car_model,
-            image=image,
-            blue_book=blue_book,
-            price=price
-        )
+            messages.success(request, "Registration successful.")
+            return redirect('user_profile')
+        else:
+            # If the form is not valid, render the form with errors
+            context = {
+                'user_profile': user_profile,
+                'form': form,
+            }
+            return render(request, self.template_name, context)
 
-        DistributorRequest.objects.create(
-          requester=user_profile, 
-          car_detail=car_detail
-        )
-
-        messages.success(request, "Registration successful.")
-        return redirect('user_profile')  
+ 
 
 # ------------------------------------------------------------------------------------------------
 

@@ -115,3 +115,45 @@ class CarDetailForm(forms.ModelForm):
         model = CarDetail
         fields = ['car_type', 'car_model', 'image', 'blue_book', 'price']
 
+class DistributorRegistrationForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
+    username = forms.CharField(max_length=150, required=True)
+    email = forms.EmailField(required=True)
+    address = forms.CharField(max_length=255, required=True)
+    license_photo = forms.ImageField(required=False)
+    contact = forms.CharField(max_length=15, required=True)
+
+    car_type = forms.CharField(max_length=50, required=True)
+    car_model = forms.CharField(max_length=50, required=True)
+    car_image = forms.ImageField(required=True)
+    bluebook_image = forms.ImageField(required=True)
+    price = forms.DecimalField(max_digits=10, decimal_places=2, required=True)
+
+    class Meta:
+        model = CarDetail
+        fields = ['car_type', 'car_model', 'car_image', 'bluebook_image', 'price']
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if UserProfile.objects.filter(user__username=username).exists():
+            raise forms.ValidationError("This username is already taken.")
+        return username
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if UserProfile.objects.filter(user__email=email).exists():
+            raise forms.ValidationError("This email is already in use.")
+        return email
+
+    def clean_contact(self):
+        contact = self.cleaned_data.get('contact')
+        if not contact.isdigit():
+            raise forms.ValidationError("Contact number must contain only digits.")
+        return contact
+
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+        if price <= 0:
+            raise forms.ValidationError("Price must be a positive number.")
+        return price
