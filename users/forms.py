@@ -134,18 +134,6 @@ class DistributorRegistrationForm(forms.ModelForm):
         model = CarDetail
         fields = ['car_type', 'car_model', 'car_image', 'bluebook_image', 'price']
 
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        if UserProfile.objects.filter(user__username=username).exists():
-            raise forms.ValidationError("This username is already taken.")
-        return username
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if UserProfile.objects.filter(user__email=email).exists():
-            raise forms.ValidationError("This email is already in use.")
-        return email
-
     def clean_contact(self):
         contact = self.cleaned_data.get('contact')
         if not contact.isdigit():

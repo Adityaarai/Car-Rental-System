@@ -41,7 +41,7 @@ class CarDetail(models.Model):
 
     # display what is shown in the product name
     def __str__(self):
-        return f'{self.car_model} - {self.car_type}'
+        return f'{self.car_id} - {self.car_model} - {self.car_type}'
 
 # car orders table model
 class CarOrder(models.Model):

@@ -16,6 +16,8 @@ from django.conf import settings
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.http import HttpResponseRedirect
 from .models import DistributorRequest
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 # Create your views here.
 class LoginView(View):
@@ -103,6 +105,8 @@ class UserProfileView(View):
       return render(request, self.template_name, context)
 
     def post(self, request):
+      user = request.user
+
       if 'updateProfile' in request.POST:
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
@@ -130,6 +134,21 @@ class UserProfileView(View):
         messages.success(request, "Profile updated successfully")
 
         return redirect('user_profile')
+      elif 'changePassword' in request.POST:
+        form = PasswordChangeForm(user, request.POST)
+        if form.is_valid():
+          form.save()
+          update_session_auth_hash(request, form.user)
+          messages.success(request, "Password updated successfully.")
+          return redirect('user_profile')  # Redirect to the same page to ensure data is refreshed
+        else:
+          for field, errors in form.errors.items():
+              for error in errors:
+                  messages.error(request, f"{field}: {error}")
+                  return redirect('user_profile')
+      messages.error(request, "Invalid request.")
+      return redirect('user_profile')
+
 
 # ------------------------------------------------------------------------------------------------
 
@@ -446,7 +465,12 @@ class DistributorRegisterView(View):
             # Save car details
             car_detail = form.save(commit=False)
             car_detail.renter = user_profile
+            if form.cleaned_data.get('car_image'):
+                car_detail.image = form.cleaned_data.get('car_image')
+            if form.cleaned_data.get('bluebook_image'):
+                car_detail.blue_book = form.cleaned_data.get('bluebook_image')
             car_detail.save()
+
 
             # Create distributor request
             DistributorRequest.objects.create(
@@ -499,6 +523,8 @@ The VROOM-Car-Rental-Service Team
             except Exception as e:
                 messages.error(request, f"Request rejected, but failed to send email. Error: {str(e)}")
 
+            car_detail = CarDetail.objects.get(car_id=request_detail.car_detail.car_id)
+            car_detail.delete()
             request_detail.delete()
             return redirect(self.success_url)
         else:

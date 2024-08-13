@@ -14,52 +14,90 @@
     </div>
     <form id="mainForm" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
-      
       <div class="first-page">
-        <h2>Verify your details</h2>
-        {{ form.first_name.label_tag }} {{ form.first_name }}<br />
-        {{ form.last_name.label_tag }} {{ form.last_name }}<br />
-        {{ form.username.label_tag }} {{ form.username }}<br />
-        {{ form.email.label_tag }} {{ form.email }}<br />
-        {{ form.address.label_tag }} {{ form.address }}<br />
-    
-        {% if user_profile.license_photo %}
+          <h2>Verify your details</h2>
+          {{ form.first_name.label_tag }} {{ form.first_name }}<br />
+          {% if form.first_name.errors %}
+              <div class="error">{{ form.first_name.errors }}</div>
+          {% endif %}
+  
+          {{ form.last_name.label_tag }} {{ form.last_name }}<br />
+          {% if form.last_name.errors %}
+              <div class="error">{{ form.last_name.errors }}</div>
+          {% endif %}
+  
+          {{ form.username.label_tag }} {{ form.username }}<br />
+          {% if form.username.errors %}
+              <div class="error">{{ form.username.errors }}</div>
+          {% endif %}
+  
+          {{ form.email.label_tag }} {{ form.email }}<br />
+          {% if form.email.errors %}
+              <div class="error">{{ form.email.errors }}</div>
+          {% endif %}
+  
+          {{ form.address.label_tag }} {{ form.address }}<br />
+          {% if form.address.errors %}
+              <div class="error">{{ form.address.errors }}</div>
+          {% endif %}
+  
+          {% if user_profile.license_photo %}
             <label>Current License Photo:</label><br />
             <img src="{{ user_profile.license_photo.url }}" alt="License Photo" width="200px"><br />
-        {% endif %}
-    
-        {{ form.license_photo.label_tag }} {{ form.license_photo }}<br />
-        {{ form.contact.label_tag }} {{ form.contact }}<br />
-    
-        <a class="button" href="{% url 'user_profile' %}">Back</a>
-        <button class="button" type="button" id="verify-btn">Verify Details</button>
-    </div>
+          {% endif %}
+
+          {{ form.license_photo.label_tag }} {{ form.license_photo }}<br />
+          {% if form.license_photo.errors %}
+              <div class="error">{{ form.license_photo.errors }}</div>
+          {% endif %}
   
-    <div class="second-page" style="display: none;">
-      <h2>Add a car</h2>
-      {{ form.car_type.label_tag }} {{ form.car_type }}<br />
-      {{ form.car_model.label_tag }} {{ form.car_model }}<br />
-      {{ form.price.label_tag }} {{ form.price }}<br />
-      {{ form.car_image.label_tag }} {{ form.car_image }}<br /><br />
+          {{ form.contact.label_tag }} {{ form.contact }}<br />
+          {% if form.contact.errors %}
+              <div class="error">{{ form.contact.errors }}</div>
+          {% endif %}
   
-      {% if car_detail.blue_book %}
-          <label>Current Blue Book Image:</label><br />
-          <img src="{{ car_detail.blue_book.url }}" alt="Blue Book Image" width="200px"><br /><br />
-      {% endif %}
-  
-      {{ form.bluebook_image.label_tag }} {{ form.bluebook_image }}<br /><br />
-      <a class="button" id="previous">Previous</a>
-      <button class="button" type="button" id="addCar">Add Car</button>
-  </div>
-  
-  
-      <div class="third-page" style="display: none;">
-          <h1>Terms and Conditions</h1>
-          <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Rem, autem odit? Reprehenderit aperiam sunt aliquam repudiandae quisquam autem corrupti impedit, eos beatae, porro unde nesciunt obcaecati facere? Sint, qui reprehenderit!</p>
-          <a class="button" id="previous2">Previous</a>
-          <button type="submit" name="sendRequest" id="submitForm">Send Request</button>
+          <a class="button" href="{% url 'user_profile' %}">Back</a>
+          <button class="button" type="button" id="verify-btn">Verify Details</button>
       </div>
+  
+      <div class="second-page" style="display: none;">
+          <h2>Add a car</h2>
+          {{ form.car_type.label_tag }} {{ form.car_type }}<br />
+          {% if form.car_type.errors %}
+              <div class="error">{{ form.car_type.errors }}</div>
+          {% endif %}
+  
+          {{ form.car_model.label_tag }} {{ form.car_model }}<br />
+          {% if form.car_model.errors %}
+              <div class="error">{{ form.car_model.errors }}</div>
+          {% endif %}
+  
+          {{ form.price.label_tag }} {{ form.price }}<br />
+          {% if form.price.errors %}
+              <div class="error">{{ form.price.errors }}</div>
+          {% endif %}
+  
+          {{ form.car_image.label_tag }} {{ form.car_image }}<br /><br />
+          {% if form.car_image.errors %}
+              <div class="error">{{ form.car_image.errors }}</div>
+          {% endif %}
+
+          {{ form.bluebook_image.label_tag }} {{ form.bluebook_image }}<br /><br />
+          {% if form.bluebook_image.errors %}
+              <div class="error">{{ form.bluebook_image.errors }}</div>
+          {% endif %}
+  
+          <a class="button" id="previous">Previous</a>
+          <button class="button" type="button" id="addCar">Add Car</button>
+      </div>
+      <div class="third-page" style="display: none;">
+        <h1>Terms and Conditions</h1>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Rem, autem odit? Reprehenderit aperiam sunt aliquam repudiandae quisquam autem corrupti impedit, eos beatae, porro unde nesciunt obcaecati facere? Sint, qui reprehenderit!</p>
+        <a class="button" id="previous2">Previous</a>
+        <button type="submit" name="sendRequest" id="submitForm">Send Request</button>
+    </div>
   </form>
+  
   </div>
 </body>
 </html>
@@ -272,6 +310,9 @@
 
   .active {
     background-color: var(--indigo);
+  }
+  .error {
+    color: var(--red);
   }
 
 </style>

@@ -6,7 +6,7 @@ class CarOrderAdmin(admin.ModelAdmin):
   list_filter = ('rentee', 'status', 'product')
 
 class CarDetailAdmin(admin.ModelAdmin):
-  list_display = ('renter', 'car_type', 'car_model', 'availability')
+  list_display = ('car_id','renter', 'car_type', 'car_model', 'availability')
   list_filter = ['car_type', 'car_model', 'availability']
 
 # Register your models here.

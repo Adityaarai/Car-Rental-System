@@ -163,7 +163,6 @@
         action="{% url 'user_profile' %}"
       >
         {% csrf_token %}
-        <input type="hidden" name="change_password" />
         <label for="oldPassword">Old Password:</label>
         <input
           type="password"
@@ -188,154 +187,9 @@
           required
         /><br />
 
-        <button class="button" type="submit">Update Password</button>
+        <button class="button" type="submit" name="changePassword">Update Password</button>
       </form>
     </div>
-
-    <!-- Add Car Popup -->
-    <!-- <div class="popup" id="addCarPopup">
-      <div class="popup-content">
-        <span class="close" id="close" onclick="closePopup('addCarPopup')"
-          >&times;</span
-        >
-        <h2>Add Car</h2>
-        <form
-          id="addCarForm"
-          method="POST"
-          action=""
-          enctype="multipart/form-data"
-        >
-          {% csrf_token %}
-          <label for="contactNumber">Contact Number:</label><br />
-          <input type="text" id="contactNumber" name="contactNumber" /><br />
-          <label for="car_type">Car Type:</label><br />
-          <input type="text" id="car_type" name="car_type" /><br />
-          <label for="model">Model:</label><br />
-          <input type="text" id="model" name="model" /><br />
-          <label for="price">Price:</label><br />
-          <input type="text" id="price" name="price" /><br />
-          <label for="carImage">Car Image:</label><br />
-          <input
-            type="file"
-            id="carImage"
-            name="carImage"
-            required
-          /><br /><br />
-          <button type="submit" id="car_done">Add Car</button>
-        </form>
-      </div>
-    </div> -->
-
-    <!-- Remove Car section -->
-    <!-- <div id="removeCarSection" class="section" style="display: none">
-      <h3>My Cars</h3>
-      {% if cars %}
-      <table id="removeCarDetailsTable">
-        <thead>
-          <tr>
-            <th>Renter Name</th>
-            <th>Contact Number</th>
-            <th>Car Type</th>
-            <th>Model</th>
-            <th>Price</th>
-            <th>Car Image</th>
-            <th>Action</th> -->
-            <!-- Add Action column for Remove button -->
-          <!-- </tr>
-        </thead>
-        <tbody>
-          {% for car in cars %}
-          <tr>
-            <td>{{ car.renter_name }}</td>
-            <td>{{ car.renter_contact }}</td>
-            <td>{{ car.car_type }}</td>
-            <td>{{ car.car_model }}</td>
-            <td>{{ car.price }}</td>
-            <td>
-              {% if car.image %}
-              <img
-                src="{{ car.image.url }}"
-                alt="Car Image"
-                style="width: 100px"
-              />
-              {% else %} No Image Available {% endif %}
-            </td>
-            <td>
-              <button class="removeCarDetailsButton" data-car-id="{{ car.id }}">
-                Remove
-              </button> -->
-              <!-- Add Remove button -->
-            <!-- </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      {% else %}
-      <p>You haven't added any cars yet.</p>
-      {% endif %}
-    </div> -->
-
-    <!-- Popup for Remove Car Confirmation -->
-    <!-- <div id="removeCarConfirmation" class="popup" style="display: none">
-      <div class="popup-content">
-        <span class="close" onclick="closePopup('removeCarConfirmation')"
-          >&times;</span
-        >
-        <h2>Remove Car</h2>
-        <p>Are you sure you want to remove this car?</p>
-        <form id="removeCarForm" method="POST" action="">
-          {% csrf_token %}
-          <input type="hidden" name="car_id" id="carIdInput" />
-          <button type="submit">Yes</button>
-          <button type="button" onclick="closePopup('removeCarConfirmation')">
-            No
-          </button>
-        </form>
-      </div>
-    </div> -->
-
-    <!-- My Car section -->
-    <!-- <div id="myCarSection" class="section" style="display: none">
-      <h3>My Cars</h3>
-      {% if cars %}
-      <table id="carDetailsTable">
-        <thead>
-          <tr>
-            <th>Renter Name</th>
-            <th>Contact Number</th>
-            <th>Car Type</th>
-            <th>Model</th>
-            <th>Price</th>
-            <th>Car Image</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for car in cars %}
-          <tr>
-            <td>{{ car.renter_name }}</td>
-            <td>{{ car.renter_contact }}</td>
-            <td>{{ car.car_type }}</td>
-            <td>{{ car.car_model }}</td>
-            <td>{{ car.price }}</td>
-            <td>
-              {% if car.image %}
-              <img
-                src="{{ car.image.url }}"
-                alt="Car Image"
-                style="width: 100px"
-              />
-              {% else %} No Image Available {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      {% else %}
-      <p>You haven't added any cars yet.</p>
-      {% endif %}
-      <button id="car-add-btn">Add Car</button>
-      <button id="removeCarBtn">Remove Car</button>
-    </div> -->
 
     <!--Pending Bookings Section-->
     <div id="pendingSection" class="section" style="display: none">
@@ -717,7 +571,7 @@
       width: 90vw;
       margin: 0 5%;
       margin-top: 9.8vh;
-      min-height: 65.6vh;
+      min-height: 65.7vh;
     }
 
     .details {
