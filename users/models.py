@@ -1,10 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.text import slugify
+from common.util import license_picture_path
 
-def license_picture_path(instance, filename):
-  renter_name = slugify(instance.user.get_full_name())
-  return f'license_pictures/{renter_name}/{filename}'
 
 # Create your models here.
 class UserProfile(models.Model):

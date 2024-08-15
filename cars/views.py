@@ -58,22 +58,22 @@ class OrderCreateView(LoginRequiredMixin, View):
     booking_end_date = request.POST.get('bookingEndDate')
 
     try:
-      product = CarDetail.objects.get(car_id=car_id)
+      car_detail = CarDetail.objects.get(car_id=car_id)
 
       if not booking_start_date or not booking_end_date:
         messages.error(request, "Please enter start and end date to proceed with the booking process.")
-        return redirect(reverse('orders', kwargs={'pk': product.car_id}))
+        return redirect(reverse('orders', kwargs={'pk': car_detail.car_id}))
 
       start_date = datetime.strptime(booking_start_date, '%Y-%m-%d').date()
       end_date = datetime.strptime(booking_end_date, '%Y-%m-%d').date()
 
       if start_date < timezone.now().date():
         messages.error(request, "Can not book cars in the past.")
-        return redirect(reverse('orders', kwargs={'pk': product.car_id}))
+        return redirect(reverse('orders', kwargs={'pk': car_detail.car_id}))
 
       if end_date < start_date:
         messages.error(request, "Unless you have a time machine, can not book cars in the past.")
-        return redirect(reverse('orders', kwargs={'pk': product.car_id})) 
+        return redirect(reverse('orders', kwargs={'pk': car_detail.car_id})) 
 
 
       existing_order = CarOrder.objects.filter(rentee=rentee, status='Pending').first()
@@ -81,12 +81,12 @@ class OrderCreateView(LoginRequiredMixin, View):
         messages.error(request, "You have already placed an order!")
         return redirect('booking_complete')
 
-      price = product.price
+      price = car_detail.price
       duration = (end_date - start_date).days
       total_price = price * duration
 
       order = CarOrder.objects.create(
-        product=product,
+        car_detail=car_detail,
         start_date=start_date,
         end_date=end_date,
         rentee=rentee,
@@ -132,7 +132,7 @@ class PaymentView(View):
   def get(self, request, pk):
     booking = CarOrder.objects.filter(order_id=pk).first()
 
-    car_detail = booking.product
+    car_detail = booking.car_detail
     car_name = f"{car_detail.car_type} {car_detail.car_model}"
     car_image = car_detail.image.url
     context = {
@@ -144,3 +144,9 @@ class PaymentView(View):
     }
 
     return render(request, self.template_name, context)
+
+class AddCarView(View):
+  template_name = 'cars/car_add_form.html'
+
+  def get(self, request):
+    return render(request, self.template_name)

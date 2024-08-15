@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distributor Dashboard - Car Add Form</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Add Car</h1>
+    <form action="" method="post" enctype="multipart/form-data">
+
+      <label for="car_type">Choose a car:</label>
+      <select name="car_type" id="car_type">
+        <option value="SUV">SUV</option>
+        <option value="EV">EV</option>
+        <option value="mercedes">Mercedes</option>
+        <option value="audi">Audi</option>
+      </select>
+      <br>
+      <label for="car_model">Enter you car model:</label>
+      <input type="text" name="car_model" id="">
+      <br>
+      <label for="price">Enter the price (per day):</label>
+      <input type="number" name="price">
+      <br>
+      <label for="image">Add a car picture:</label>
+      <input type="file" name="image" id="">
+      <br>
+      <label for="blue_book">Add a blue book image:</label>
+      <input type="file" name="blue_book" id="">
+      <div class="buttons">
+        <a href="{% url 'distributor_dashboard' %}" class="button">Back</a>
+        <button type="submit" class="button">Add Car</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
+
+<style>
+  :root {
+    --primary-color: #2f6690;
+    --secondary-color: #16425b;
+    --alert-danger: #ff4d4d;
+    --alert-success: #4caf50;
+    --background-color: #f4f4f4;
+    --text-color: #333;
+    --border-color: #ccc;
+    --input-background-color: #fff;
+}
+
+*{
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.container {
+    margin: 2% 5%;
+    background-color: var(--input-background-color);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="file"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--input-background-color);
+    color: var(--text-color);
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="file"]:focus,
+select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 5px var(--primary-color);
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: var(--input-background-color);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.button:hover {
+    background-color: var(--secondary-color);
+}
+
+.button:active {
+    background-color: var(--secondary-color);
+    transform: scale(0.98);
+}
+
+</style>

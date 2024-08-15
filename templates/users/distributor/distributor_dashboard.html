@@ -21,7 +21,7 @@
           <li>
             <a id="car-btn" onclick="toggleContent('car')">
               <i class="fas fa-car"></i>
-              <span id="distributor-topic">Car</span>
+              <span id="distributor-topic">Cars</span>
             </a>
           </li>
           <li>
@@ -128,6 +128,9 @@
         <!-- displaying cars -->
         <div id="car-content">
           <div class="all">
+            <a href="{% url 'add_car' %}">
+              <button id="car-add-btn">Add Car</button>
+            </a>
             <!-- filter to navigate different catogeries of cars -->
             <div class="filter">
               <button class="filter-btn" data-category="All">All</button>
@@ -664,7 +667,7 @@ table tr:nth-child(even) {
   margin: 7px 0;
 }
 
-#approve-btn, #reject-btn{
+#approve-btn, #reject-btn, #car-add-btn{
   border: none;
   color: white;
   padding: 10px 20px;
@@ -677,7 +680,7 @@ table tr:nth-child(even) {
   border-radius: 4px;
 }
 
-#approve-btn{
+#approve-btn, #car-add-btn{
   background-color: var(--green);
 }
 #reject-btn{
