@@ -145,6 +145,8 @@ class PaymentView(View):
 
     return render(request, self.template_name, context)
 
+# ------------------------------------------------------------------------------------------------
+
 class AddCarView(View):
   template_name = 'cars/car_add_form.html'
 
