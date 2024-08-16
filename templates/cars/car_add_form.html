@@ -9,13 +9,12 @@
   <div class="container">
     <h1>Add Car</h1>
     <form action="" method="post" enctype="multipart/form-data">
-
-      <label for="car_type">Choose a car:</label>
+      {% csrf_token %}
+      <label for="car_type">Choose a car type:</label>
       <select name="car_type" id="car_type">
-        <option value="SUV">SUV</option>
-        <option value="EV">EV</option>
-        <option value="mercedes">Mercedes</option>
-        <option value="audi">Audi</option>
+        {% for car_type in car_types %}
+          <option value="{{ car_type.name }}">{{ car_type.name }}</option>
+        {% endfor %} 
       </select>
       <br>
       <label for="car_model">Enter you car model:</label>

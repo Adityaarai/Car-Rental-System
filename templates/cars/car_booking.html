@@ -20,7 +20,7 @@
               <p>{{ detail.car_model }}</p>
             </div>
             <div id="name">
-              <p>{{ detail.renter_name }}</p>
+              <p>{{ detail.renter.user.get_full_name }}</p>
             </div>
             <div id="price">
               <p>Rs. {{ detail.price }}</p>

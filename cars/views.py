@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.views import View
 from django.views.generic import ListView, DetailView
-from .models import CarDetail, CarOrder, User
+from .models import CarDetail, CarOrder, User, CarType
 from datetime import datetime
 from django.utils import timezone
 from django.urls import reverse
@@ -151,4 +151,33 @@ class AddCarView(View):
   template_name = 'cars/car_add_form.html'
 
   def get(self, request):
-    return render(request, self.template_name)
+    car_types = CarType.objects.all()
+
+    context = {
+      'car_types': car_types,
+    }
+    return render(request, self.template_name, context)
+
+  def post(self, request):
+    user_profile = UserProfile.objects.get(user=request.user)
+
+    car_type_name = request.POST.get('car_type')
+    car_model = request.POST.get('car_model')
+    price = request.POST.get('price')
+    image = request.FILES.get('image')
+    blue_book = request.FILES.get('blue_book')
+
+    car_type = CarType.objects.get(name=car_type_name)
+
+    car_detail = CarDetail.objects.create(
+      renter=user_profile,
+      car_type=car_type,
+      car_model=car_model,
+      price=price,
+      image=image,
+      blue_book=blue_book,
+    )
+
+    car_detail.save()
+    messages.success(request, 'Car detail saved successfully')
+    return redirect('distributor_dashboard')
