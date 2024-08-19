@@ -10,6 +10,7 @@
         <div class="main_details">
           <!--  Car Image -->
           <div id="image">
+            <br>
             <img src="{{ detail.image.url }}" alt="Car Image" />
           </div>
           <div id="details">
@@ -21,6 +22,9 @@
             </div>
             <div id="name">
               <p>{{ detail.renter.user.get_full_name }}</p>
+            </div>
+            <div id="address">
+              <p>{{ detail.renter.address }}</p>
             </div>
             <div id="price">
               <p>Rs. {{ detail.price }}</p>

@@ -131,19 +131,28 @@ class PaymentView(View):
 
   def get(self, request, pk):
     booking = CarOrder.objects.filter(order_id=pk).first()
+    car_image = booking.car_detail.image.url
 
-    car_detail = booking.car_detail
-    car_name = f"{car_detail.car_type} {car_detail.car_model}"
-    car_image = car_detail.image.url
     context = {
-      'car_name': car_name,
-      'price': booking.total_price,
-      'pickup_date': booking.start_date,
-      'dropoff_date': booking.end_date,
-      'image': car_image
+      'booking': booking,
+      'car_image': car_image
     }
 
     return render(request, self.template_name, context)
+
+  def post(self, request, pk):
+    esewa_number = request.POST.get('esewa_number')
+    esewa_password = request.POST.get('esewa_password')
+
+    if esewa_number and esewa_password:
+      booking = CarOrder.objects.filter(order_id=pk).first()
+      booking.status = 'Paid'
+      print(booking)
+      booking.save()
+      messages.success(request, "Payment completed successfully")
+      return redirect('user_profile')
+
+
 
 # ------------------------------------------------------------------------------------------------
 
