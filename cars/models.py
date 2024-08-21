@@ -3,17 +3,10 @@ from django.contrib.auth.models import User
 from users.models import UserProfile
 from common.util import car_blue_book_path
 
-class CarType(models.Model):
-  name = models.CharField(max_length=100)
-  logo = models.ImageField(upload_to='car_type_logo')
-
-  def __str__(self):
-    return f'{self.name}'
 
 STATUS = (
   ('Pending', 'Pending'),
   ('Approved', 'Approved'),
-  ('Paid', 'Paid'),
   ('Completed', 'Completed'),
   ('Rejected', 'Rejected'),
 )
@@ -24,8 +17,22 @@ AVAILABILITY = (
   ('Available', 'Available'),
 )
 
+PAYMENT_MEDIUM = (
+  ('Cash', 'Cash'),
+  ('Cheque', 'Cheque'),
+  ('Online', 'Online'),
+)
+
 
 # Create your models here.
+
+class CarType(models.Model):
+  name = models.CharField(max_length=100)
+  logo = models.ImageField(upload_to='car_type_logo')
+
+  def __str__(self):
+    return f'{self.name}'
+
 class CarDetail(models.Model):
     car_id = models.AutoField(primary_key=True)
     renter = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -53,3 +60,9 @@ class CarOrder(models.Model):
     # display what is shown in the order name
     def __str__(self):
         return f'{self.rentee} - {self.car_detail} - {self.total_price} - {self.status}'
+
+
+class Payment(models.Model):
+  car_order = models.ForeignKey(CarOrder, on_delete=models.CASCADE)
+  payment_medium = models.CharField(max_length=20, choices=PAYMENT_MEDIUM, null=True)
+  status = models.BooleanField(default=False)

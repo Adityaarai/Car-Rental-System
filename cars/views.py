@@ -127,7 +127,7 @@ class LearnMoreView(View):
 # ------------------------------------------------------------------------------------------------
 
 class PaymentView(View):
-  template_name = 'users/user/payment.html'
+  template_name = 'users/user/payment_mode.html'
 
   def get(self, request, pk):
     booking = CarOrder.objects.filter(order_id=pk).first()

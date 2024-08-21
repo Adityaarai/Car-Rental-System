@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VROOM - Select Payment Method</title>
+</head>
+<body>
+  <div class="container">
+    <a href="{% url 'user_profile' %}">Back</a>
+    <h1>Select Payment Method</h1>
+    <form action="" method="post">
+      {% csrf_token %}
+      
+      <label for="cash">
+        <input type="radio" id="cash" name="payment_method" value="cash">
+        Cash On Delivery
+      </label>
+      <br>
+      
+      <label for="cheque">
+        <input type="radio" id="cheque" name="payment_method" value="cheque">
+        Cheque
+      </label>
+      <br>
+      
+      <label for="esewa">
+        <input type="radio" id="esewa" name="payment_method" value="esewa">
+        eSewa
+      </label>
+      <br>
+      
+      <label for="online_banking">
+        <input type="radio" id="online_banking" name="payment_method" value="online_banking">
+        Online Banking
+      </label>
+      <br>
+      
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</body>
+</html>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+
+  .container {
+    width: 80%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h1 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  a {
+    display: block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #333;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+  }
+
+  input[type="radio"] {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    appearance: none;
+    background-color: #fff;
+    border: 2px solid #333;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+
+  input[type="radio"]:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #007bff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+</style>
