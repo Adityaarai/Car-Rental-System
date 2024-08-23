@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+}
+
+:root {
+  --indigo: #16425b;
+  --lapis: #2f6690;
+  --cerulean: #3a7ca5;
+  --skyblue: #81c3d7;
+  --platinum: #d9dcd6;
+  --darkgray: #b4b4b3;
+  --red: #f44336;
+  --green: #4caf50;
+  --darkgreen: darkgreen;
+  --crimson: crimson;
+  --white: #ffffff;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+}

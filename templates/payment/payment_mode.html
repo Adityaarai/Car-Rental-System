@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VROOM - Select Payment Method</title>
+  <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
   <div class="container">
     <a href="{% url 'user_profile' %}">Back</a>
     <h1>Select Payment Method</h1>
-    <form action="" method="post">
+    <form method="post">
       {% csrf_token %}
       
       <label for="cash">
@@ -36,11 +37,26 @@
       </label>
       <br>
       
-      <button type="submit">Submit</button>
+      <button type="submit" id="submit_btn">Submit</button>
     </form>
   </div>
 </body>
 </html>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
+    const submitButton = document.getElementById('submit_btn');
+    
+    paymentMethods.forEach(method => {
+      method.addEventListener('change', () => {
+        if (method.checked) {
+          submitButton.name = method.value;
+        }
+      });
+    });
+  });
+</script>
 
 <style>
   body {
@@ -98,8 +114,8 @@
   }
 
   input[type="radio"]:checked {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: var(--indigo);
+    border-color: var(--cerulean);
   }
 
   button {

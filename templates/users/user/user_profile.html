@@ -17,7 +17,7 @@
 
     <!--buttons in profile page-->
     <button class="button" id="profileBtn">Profile</button>
-    <button class="button" id="changePasswordBtn">Change Password</button>
+    <button class="button" id="myBookingsBtn">My Bookings</button>
     {% if user.is_staff %}
     <a href="{% url 'distributor_dashboard' %}">
       <button class="button">Distributor View</button>
@@ -27,16 +27,16 @@
       <button class="button" id="distributorRequest">Register as a Distributor</button>
     </a>
     {% endif %}
-    <button class="button" id="myBookingsBtn">My Bookings</button>
+    
     
     
 
     <!-- My Bookings dropdown -->
     <div id="myBookingsDropdown" style="display: none">
-      <button class="dropdown-btn1" id="pendingBtn">Pending</button>
-      <button class="dropdown-btn2" id="approvedBtn">Approved</button>
-      <button class="dropdown-btn3" id="paidBtn">Paid</button>
-      <button class="dropdown-btn4" id="completedBtn">Completed</button>
+      <button class="booking-btn" id="pendingBtn">Pending</button>
+      <button class="booking-btn" id="approvedBtn">Approved</button>
+      <button class="booking-btn" id="paidBtn">Paid</button>
+      <button class="booking-btn" id="completedBtn">Completed</button>
     </div>
 
     <!-- Profile section -->
@@ -72,6 +72,7 @@
       </p>
 
       <button class="button" id="editProfileBtn">Edit Profile</button>
+      <button class="button" id="changePasswordBtn">Change Password</button>
 
       <div id="editProfileForm" style="display: none">
         <br>
@@ -198,7 +199,8 @@
       <table id="pendingBookingDetailsTable">
         <thead>
           <tr>
-            <th>Car</th>
+            <th>Car Detail</th>
+            <th>Renter</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Status</th>
@@ -207,7 +209,8 @@
         <tbody>
           {% for booking in pending_bookings %}
           <tr>
-            <td>{{ booking.product }}</td>
+            <td>{{ booking.car_detail.car_type }} - {{booking.car_detail.car_model}}</td>
+            <td>{{ booking.car_detail.renter }}</td>
             <td>{{ booking.start_date }}</td>
             <td>{{ booking.end_date }}</td>
             <td>{{ booking.status }}</td>
@@ -227,7 +230,8 @@
       <table id="approvedBookingDetailsTable">
         <thead>
           <tr>
-            <th>Car</th>
+            <th>Car Detail</th>
+            <th>Renter</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Status</th>
@@ -237,12 +241,13 @@
         <tbody>
           {% for booking in approved_bookings %}
           <tr>
-            <td>{{ booking.product }}</td>
+            <td>{{ booking.car_detail.car_type }} - {{booking.car_detail.car_model}}</td>
+            <td>{{ booking.car_detail.renter }}</td>
             <td>{{ booking.start_date }}</td>
             <td>{{ booking.end_date }}</td>
             <td>{{ booking.status }}</td>
             <td>
-              <form action="{% url 'payment' booking.order_id %}">
+              <form action="{% url 'payment_mode' booking.order_id %}">
                 <button type="submit">Pay</button>
               </form>
             </td>
@@ -262,7 +267,8 @@
       <table id="paidBookingDetailsTable">
         <thead>
           <tr>
-            <th>Car</th>
+            <th>Car Detail</th>
+            <th>Renter</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Status</th>
@@ -271,7 +277,8 @@
         <tbody>
           {% for booking in paid_bookings %}
           <tr>
-            <td>{{ booking.product }}</td>
+            <td>{{ booking.car_detail.car_type }} - {{booking.car_detail.car_model}}</td>
+            <td>{{ booking.car_detail.renter }}</td>
             <td>{{ booking.start_date }}</td>
             <td>{{ booking.end_date }}</td>
             <td>{{ booking.status }}</td>
@@ -291,7 +298,8 @@
       <table id="completedBookingDetailsTable">
         <thead>
           <tr>
-            <th>Car</th>
+            <th>Car Detail</th>
+            <th>Renter</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Status</th>
@@ -300,7 +308,8 @@
         <tbody>
           {% for booking in completed_bookings %}
           <tr>
-            <td>{{ booking.product }}</td>
+            <td>{{ booking.car_detail.car_type }} - {{booking.car_detail.car_model}}</td>
+            <td>{{ booking.car_detail.renter }}</td>
             <td>{{ booking.start_date }}</td>
             <td>{{ booking.end_date }}</td>
             <td>{{ booking.status }}</td>
@@ -362,7 +371,6 @@
       var approvedBtn = document.getElementById("approvedBtn");
       var paidBtn = document.getElementById("paidBtn");
       var completedBtn = document.getElementById("completedBtn");
-      var paymentBtn = document.getElementById("paymentButton");
       var removeCarBtn = document.getElementById("removeCarBtn");
       var addCarForm = document.getElementById("addCarForm");
 
@@ -370,10 +378,7 @@
         editProfileForm.style.display = "none";
         changePasswordSection.style.display = "none";
         profileSection.style.display = "block";
-        // addCar.style.display = "none";
-        // myCarSection.style.display = "none";
         myBookingsDropdown.style.display = "none";
-        // removeCarSection.style.display = "none";
         pendingSection.style.display = "none";
         approvedSection.style.display = "none";
         paidSection.style.display = "none";
@@ -384,107 +389,24 @@
         editProfileForm.style.display = "block";
         changePasswordSection.style.display = "none";
         profileSection.style.display = "block";
-        // addCar.style.display = "none";
-        // myCarSection.style.display = "none";
         myBookingsDropdown.style.display = "none";
-        // removeCarSection.style.display = "none";
         pendingSection.style.display = "none";
         approvedSection.style.display = "none";
         paidSection.style.display = "none";
         completedSection.style.display = "none";
-      });
-
-      // Adding validation for contact number to be 10 digits
-      function validateProfileForm() {
-        var contactNumber = document.getElementById("editContact").value;
-        var contactError = document.getElementById("contactError");
-
-        if (!/^\d{10}$/.test(contactNumber)) {
-          contactError.style.display = "block"; // Show error message
-          return false; // Prevent form submission
-        } else {
-          contactError.style.display = "none"; // Hide error message if validation passes
-          return true; // Allow form submission
-        }
-      }
-
-      var profileForm = document.getElementById("editProfileForm");
-
-      profileForm.addEventListener("submit", function (event) {
-        if (!validateProfileForm()) {
-          event.preventDefault(); // Prevent form submission if validation fails
-        }
       });
 
       changePasswordBtn.addEventListener("click", function () {
         editProfileForm.style.display = "none";
         changePasswordSection.style.display = "block";
-        profileSection.style.display = "none";
-        // addCar.style.display = "none";
-        // myCarSection.style.display = "none";
+        profileSection.style.display = "block";
         myBookingsDropdown.style.display = "none";
-        // removeCarSection.style.display = "none";
         pendingSection.style.display = "none";
         approvedSection.style.display = "none";
         paidSection.style.display = "none";
         completedSection.style.display = "none";
       });
 
-      // addBtn.addEventListener("click", function () {
-      //   editProfileForm.style.display = "none";
-      //   changePasswordSection.style.display = "none";
-      //   profileSection.style.display = "block";
-      //   addCar.style.display = "block";
-      //   myCarSection.style.display = "none";
-      //   myBookingsDropdown.style.display = "none";
-      //   removeCarSection.style.display = "none";
-      //   pendingSection.style.display = "none";
-      //   approvedSection.style.display = "none";
-      //   paidSection.style.display = "none";
-      //   completedSection.style.display = "none";
-      // });
-
-      // Event listener for Remove Car button
-      // removeCarBtn.addEventListener("click", function () {
-      //   editProfileForm.style.display = "none";
-      //   changePasswordSection.style.display = "none";
-      //   profileSection.style.display = "block";
-      //   addCar.style.display = "none";
-      //   myCarSection.style.display = "none";
-      //   myBookingsDropdown.style.display = "none";
-      //   removeCarSection.style.display = "block";
-      //   pendingSection.style.display = "none";
-      //   approvedSection.style.display = "none";
-      //   paidSection.style.display = "none";
-      //   completedSection.style.display = "none";
-      // });
-
-      // Event listener for Remove button in Remove Car Details table
-      document.querySelectorAll(".removeCarDetailsButton").forEach((button) => {
-        button.addEventListener("click", function () {
-          const carId = this.getAttribute("data-car-id");
-          // Set the value of the hidden input field in the form
-          document.getElementById("carIdInput").value = carId;
-          // Show the confirmation popup
-          document.getElementById("removeCarConfirmation").style.display =
-            "block";
-        });
-      });
-
-      // myCarBtn.addEventListener("click", function () {
-      //   // Handle My Car button click
-      //   editProfileForm.style.display = "none";
-      //   changePasswordSection.style.display = "none";
-      //   profileSection.style.display = "none";
-      //   addCar.style.display = "none";
-      //   myCarSection.style.display = "block";
-      //   myBookingsDropdown.style.display = "none";
-      //   removeCarSection.style.display = "none";
-      //   pendingSection.style.display = "none";
-      //   approvedSection.style.display = "none";
-      //   paidSection.style.display = "none";
-      //   completedSection.style.display = "none";
-      // });
 
       // Event listener for My Bookings button
       myBookingsBtn.addEventListener("click", function () {
@@ -499,9 +421,7 @@
         editProfileForm.style.display = "none";
         changePasswordSection.style.display = "none";
         profileSection.style.display = "none";
-        // addCar.style.display = "none";
-        // myCarSection.style.display = "none";
-        // removeCarSection.style.display = "none";
+
 
         // Event listener for dropdown buttons
         pendingBtn.addEventListener("click", function () {
@@ -510,40 +430,52 @@
           document.getElementById("approvedSection").style.display = "none";
           document.getElementById("paidSection").style.display = "none";
           document.getElementById("completedSection").style.display = "none";
+          pendingBtn.classList.add("active");
+          paidBtn.classList.remove("active");
+          approvedBtn.classList.remove("active");
+          completedBtn.classList.remove("active");
         });
 
         // Event listener for dropdown buttons
         approvedBtn.addEventListener("click", function () {
-          // Show pending section, hide others
+          // Show approved section, hide others
           document.getElementById("approvedSection").style.display = "block";
           document.getElementById("pendingSection").style.display = "none";
           document.getElementById("paidSection").style.display = "none";
           document.getElementById("completedSection").style.display = "none";
+          pendingBtn.classList.remove("active");
+          paidBtn.classList.remove("active");
+          approvedBtn.classList.add("active");
+          completedBtn.classList.remove("active");
         });
-      });
 
-      // Event listener for the Paid Bookings section
-      paidBtn.addEventListener("click", function () {
-        // Show paid section, hide others
-        document.getElementById("paidSection").style.display = "block";
-        document.getElementById("pendingSection").style.display = "none";
-        document.getElementById("approvedSection").style.display = "none";
-        document.getElementById("completedSection").style.display = "none";
-      });
+        // Event listener for the Paid Bookings section
+        paidBtn.addEventListener("click", function () {
+          // Show paid section, hide others
+          document.getElementById("paidSection").style.display = "block";
+          document.getElementById("pendingSection").style.display = "none";
+          document.getElementById("approvedSection").style.display = "none";
+          document.getElementById("completedSection").style.display = "none";
+          pendingBtn.classList.remove("active");
+          paidBtn.classList.add("active");
+          approvedBtn.classList.remove("active");
+          completedBtn.classList.remove("active");
+        });
 
-      // Event listener for Completed Bookings button
-      completedBtn.addEventListener("click", function () {
-        // Show completed section, hide others
-        document.getElementById("completedSection").style.display = "block";
-        document.getElementById("paidSection").style.display = "none";
-        document.getElementById("pendingSection").style.display = "none";
-        document.getElementById("approvedSection").style.display = "none";
-      });
+        // Event listener for Completed Bookings button
+        completedBtn.addEventListener("click", function () {
+          // Show completed section, hide others
+          document.getElementById("completedSection").style.display = "block";
+          document.getElementById("paidSection").style.display = "none";
+          document.getElementById("pendingSection").style.display = "none";
+          document.getElementById("approvedSection").style.display = "none";
+          pendingBtn.classList.remove("active");
+          paidBtn.classList.remove("active");
+          approvedBtn.classList.remove("active");
+          completedBtn.classList.add("active");
+        });
 
-      // Event listener for Payment button
-      paymentBtn.addEventListener("click", function () {
-        // Redirect to the payment page
-        window.location.href = "payment.html";
+        pendingBtn.click();
       });
     });
   </script>
@@ -740,10 +672,7 @@
     }
 
     /* CSS for dropdown buttons */
-    .dropdown-btn1,
-    .dropdown-btn2,
-    .dropdown-btn3,
-    .dropdown-btn4 {
+    .booking-btn {
       padding: 11px 22px; /* Increasing padding to make the buttons wider */
       margin-right: 15px; /* Adjusting margin to provide spacing between buttons */
       border: 1px solid var(--indigo); /* Adding border for better visibility */
@@ -755,110 +684,15 @@
     }
 
     /* Hover effect */
-    .dropdown-btn1:hover,
-    .dropdown-btn2:hover,
-    .dropdown-btn3:hover,
-    .dropdown-btn4:hover {
+    .booking-btn:hover {
       background-color: var(--indigo);
       color: var(--platinum);
     }
 
     /* Active state */
-    .dropdown-btn1:active,
-    .dropdown-btn2:active,
-    .dropdown-btn3:active,
-    .dropdown-btn3:active {
+    .active {
       background-color: var(--lapis);
-    }
-
-    /* CSS for payment button */
-    #paymentButton {
-      padding: 11px 22px; /* Increasing padding to make the buttons wider */
-      margin-right: 15px; /* Adjusting margin to provide spacing between buttons */
-      border: 1px solid var(--indigo); /* Adding border for better visibility */
-      background-color: var(--platinum); /* Changing background color */
-      color: var(--indigo); /* Changing text color */
-      cursor: pointer;
-      border-radius: 4px;
-      transition: background-color 0.3s ease;
-      margin-top: 25px;
-    }
-
-    /* Hover effect */
-    #paymentButton:hover {
-      background-color: var(--indigo);
       color: var(--platinum);
-    }
-
-    /* Active state */
-    #paymentButton:active {
-      background-color: var(--lapis);
-    }
-
-    /* Adjusting the margin-top for the Remove Car section */
-    #removeCarSection {
-      margin-top: 20px;
-    }
-
-    #removeCarBtn {
-      margin-top: 2vh;
-      background-color: var(--lapis);
-      padding: 8px 27px;
-      border: none;
-      color: var(--white);
-      cursor: pointer;
-      border-radius: 5px;
-      margin-left: 10px;
-      font-size: medium;
-    }
-
-    #removeCarDetailsTable {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    #removeCarDetailsTable th,
-    #removeCarDetailsTable td {
-      border: 1px solid #dddddd;
-      padding: 8px;
-      text-align: left;
-    }
-
-    #removeCarDetailsTable th {
-      background-color: #f2f2f2;
-    }
-
-    #removeCarDetailsTable {
-      margin-top: 15px;
-    }
-
-    .removeCarDetailsButton {
-      padding: 10px 20px; /* Increase padding for larger button size */
-      background-color: var(--red); /* Change background color */
-      color: var(--white); /* Change text color */
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: medium;
-      transition: background-color 0.3s ease; /* Add transition for hover effect */
-    }
-
-    .removeCarDetailsButton:hover {
-      background-color: var(--crimson); /* Change background color on hover */
-    }
-
-    #removeCarConfirmation {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #ffff; /* Semi-transparent white background */
-      width: 400px;
-      padding: 20px;
-      border-radius: 10px;
-      z-index: 1000; /* Ensure it's above other content */
-      border: 5px solid var(--lapis); /* Decreased border size and changed border color */
     }
 
     .popup-content {
@@ -886,23 +720,6 @@
       cursor: pointer;
     }
 
-    /* Styling for buttons */
-    #confirmRemoveCar,
-    #removeCarConfirmation button {
-      padding: 12px 24px; /* Increased padding for larger buttons */
-      background-color: var(--lapis); /* Button background color */
-      color: var(--platinum); /* Button text color */
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: medium; /* Increased font size */
-      margin-right: 10px;
-    }
-
-    #confirmRemoveCar:hover,
-    #removeCarConfirmation button:hover {
-      background-color: var(--indigo); /* Button background color on hover */
-    }
 
     #pendingBookingDetailsTable,
     #approvedBookingDetailsTable,

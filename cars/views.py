@@ -126,31 +126,33 @@ class LearnMoreView(View):
 
 # ------------------------------------------------------------------------------------------------
 
-class PaymentView(View):
-  template_name = 'users/user/payment_mode.html'
+class PaymentModeView(View):
+    template_name = 'payment/payment_mode.html'
 
-  def get(self, request, pk):
-    booking = CarOrder.objects.filter(order_id=pk).first()
-    car_image = booking.car_detail.image.url
+    def get(self, request, pk):
+        booking = CarOrder.objects.filter(order_id=pk).first()
+        car_image = booking.car_detail.image.url
 
-    context = {
-      'booking': booking,
-      'car_image': car_image
-    }
+        context = {
+            'booking': booking,
+            'car_image': car_image
+        }
 
-    return render(request, self.template_name, context)
+        return render(request, self.template_name, context)
 
-  def post(self, request, pk):
-    esewa_number = request.POST.get('esewa_number')
-    esewa_password = request.POST.get('esewa_password')
+    def post(self, request, pk):
+        booking = CarOrder.objects.filter(order_id=pk).first()
+        car_image = booking.car_detail.image.url
 
-    if esewa_number and esewa_password:
-      booking = CarOrder.objects.filter(order_id=pk).first()
-      booking.status = 'Paid'
-      print(booking)
-      booking.save()
-      messages.success(request, "Payment completed successfully")
-      return redirect('user_profile')
+        context = {
+            'booking': booking,
+            'car_image': car_image
+        }
+        payment_method = request.POST.get('payment_method')
+        if payment_method == 'esewa':
+            return render(request, 'payment/esewa_payment.html', context)
+        return redirect('user_profile') 
+
 
 
 

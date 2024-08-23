@@ -25,7 +25,6 @@ PAYMENT_MEDIUM = (
 
 
 # Create your models here.
-
 class CarType(models.Model):
   name = models.CharField(max_length=100)
   logo = models.ImageField(upload_to='car_type_logo')
@@ -60,7 +59,6 @@ class CarOrder(models.Model):
     # display what is shown in the order name
     def __str__(self):
         return f'{self.rentee} - {self.car_detail} - {self.total_price} - {self.status}'
-
 
 class Payment(models.Model):
   car_order = models.ForeignKey(CarOrder, on_delete=models.CASCADE)
